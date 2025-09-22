@@ -14,7 +14,6 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
-        /* Style for the hero background image (can be used on other pages if needed) */
         .hero-bg {
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-background-land.png');
             background-size: cover;
@@ -24,9 +23,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION START: Header now contains both logged-in and logged-out states -->
-    <!-- ===================================================================== -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-2xl font-bold text-blue-700">Ecuador Terrenos</a>
@@ -75,10 +71,6 @@
             </div>
         </div>
     </header>
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION END: Header -->
-    <!-- ===================================================================== -->
-
 
     <!-- This is where the content of each individual page will be injected -->
     <main>
@@ -218,72 +210,46 @@
         </div>
     </footer>
 
-
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION START: Site-wide JavaScript updated for authentication -->
-    <!-- ===================================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Initialize Lucide Icons ---
             lucide.createIcons();
-
-            // --- Mobile Menu Toggle ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
-
-            // Close mobile menu on link click
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                 link.addEventListener('click', () => {
-                    // Don't close for logout button, as it doesn't navigate
                     if (!link.id.includes('logout')) {
                        mobileMenu.classList.add('hidden');
                     }
                 });
             });
-
-            // --- Authentication & UI Update Logic ---
             const desktopLoggedOutMenu = document.getElementById('desktop-logged-out-menu');
             const desktopLoggedInMenu = document.getElementById('desktop-logged-in-menu');
             const mobileLoggedOutMenu = document.getElementById('mobile-logged-out-menu');
             const mobileLoggedInMenu = document.getElementById('mobile-logged-in-menu');
-
             const token = localStorage.getItem('authToken');
-
             if (token) {
-                // User is logged in, show the correct menus
                 desktopLoggedOutMenu.classList.add('hidden');
                 desktopLoggedInMenu.classList.remove('hidden');
                 desktopLoggedInMenu.classList.add('flex');
-
                 mobileLoggedOutMenu.classList.add('hidden');
                 mobileLoggedInMenu.classList.remove('hidden');
                 mobileLoggedInMenu.classList.add('flex');
             } else {
-                // User is logged out, ensure default menus are shown
                 desktopLoggedOutMenu.classList.remove('hidden');
                 desktopLoggedInMenu.classList.add('hidden');
-
                 mobileLoggedOutMenu.classList.remove('hidden');
                 mobileLoggedInMenu.classList.add('hidden');
             }
-
-            // --- Logout Functionality ---
             function handleLogout(event) {
                 event.preventDefault();
                 localStorage.removeItem('authToken');
-                // You can add a confirmation message if you want
-                // alert('Has cerrado la sesión.');
                 window.location.href = '/';
             }
-
-            // Attach logout handlers
             const logoutButtonDesktop = document.getElementById('logout-button-desktop');
             const logoutButtonMobile = document.getElementById('logout-button-mobile');
-
             if (logoutButtonDesktop) {
                 logoutButtonDesktop.addEventListener('click', handleLogout);
             }
@@ -292,8 +258,5 @@
             }
         });
     </script>
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION END: JavaScript -->
-    <!-- ===================================================================== -->
 </body>
 </html>

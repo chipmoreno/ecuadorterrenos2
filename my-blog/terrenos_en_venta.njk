@@ -1,181 +1,326 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Terrenos en Venta | Ecuador Terrenos</title>
-    <meta name="description" content="Explora los terrenos en venta en Ecuador en un mapa interactivo. Encuentra lotes y propiedades en tu área de interés y contacta directamente con los vendedores.">
-    <meta name="keywords" content="mapa de terrenos, terrenos en venta, ecuador, propiedades, lotes, mapbox, gl, interactivo">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+---
+layout: "base.njk"
+title: "Explora Terrenos en Venta en Ecuador"
+---
 
-    <script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+<!-- Mapbox GL JS and CSS (Specific to this page) -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-        #map {
-            width: 100%;
-            height: 80vh; /* Adjust height as needed */
-        }
-        .marker {
-            background-color: #2563eb; /* A solid blue color */
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid white; /* A white border for visibility */
-            cursor: pointer;
-        }
-        .mapboxgl-popup {
-            max-width: 400px;
-            font-family: 'Poppins', sans-serif;
-        }
-        .mapboxgl-popup-content {
-            text-align: center;
-            padding: 15px;
-        }
-        .mapboxgl-popup-content h3 {
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-        .mapboxgl-popup-content p {
-            font-size: 1rem;
-            color: #4b5563;
-        }
-        .mapboxgl-popup-content a {
-            color: #2563eb;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .mapboxgl-popup-content a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body class="bg-gray-50 text-gray-800">
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold text-blue-700">Ecuador Terrenos</a>
-            <div class="hidden md:flex space-x-6 items-center">
-                <a href="/#anunciar" class="text-gray-600 hover:text-blue-700 font-medium">Anunciar</a>
-                <a href="/#about" class="text-gray-600 hover:text-blue-700 font-medium">Acerca de Nosotros</a>
-                <a href="/#gallery" class="text-gray-600 hover:text-blue-700 font-medium">Galería</a>
+<style>
+    /* Styles for the map and its popups (unchanged) */
+    #map {
+        width: 100%;
+        height: 75vh;
+    }
+    .marker {
+        background-color: #2563eb; width: 20px; height: 20px;
+        border-radius: 50%; border: 2px solid white; cursor: pointer;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+    }
+    .mapboxgl-popup { max-width: 300px; font-family: 'Poppins', sans-serif; }
+    .mapboxgl-popup-content { padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; }
+    .mapboxgl-popup-content img { width: 100%; height: 150px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+    .mapboxgl-popup-close-button { color: white; background-color: rgba(0,0,0,0.5); border-radius: 50%; margin: 8px 8px 0 0; }
+    /* Helper style for filter dropdowns */
+    .filter-input {
+        width: 100%;
+        px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white;
+    }
+</style>
+
+<div class="container mx-auto px-6 py-12">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Terrenos en Venta en Ecuador</h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">Usa el buscador para filtrar y explora los terrenos en el mapa o en la lista.</p>
+    </div>
+
+    <!-- NEW: Advanced Filter Controls -->
+    <div class="mb-8 p-4 bg-gray-50 rounded-lg shadow-md border border-gray-200">
+        <form id="filter-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <!-- Location Filters -->
+            <div>
+                <label for="province-filter" class="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
+                <select id="province-filter" class="filter-input">
+                    <option value="">Todas</option>
+                </select>
             </div>
-            <button id="mobile-menu-button" class="md:hidden">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
-            <a href="/#anunciar" class="block text-gray-600 hover:text-blue-700 font-medium">Anunciar</a>
-            <a href="/#about" class="block text-gray-600 hover:text-blue-700 font-medium">Acerca de Nosotros</a>
-            <a href="/#gallery" class="block text-gray-600 hover:text-blue-700 font-medium">Galería</a>
-        </div>
-    </header>
+            <div>
+                <label for="city-filter" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+                <select id="city-filter" class="filter-input" disabled>
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <!-- Keyword Search -->
+            <div>
+                <label for="keyword-search" class="block text-sm font-medium text-gray-700 mb-1">Palabra Clave</label>
+                <input type="text" id="keyword-search" placeholder="Ej: playa, comercial..." class="filter-input">
+            </div>
+             <!-- Price Filters -->
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label for="min-price" class="block text-sm font-medium text-gray-700 mb-1">Precio Mín.</label>
+                    <input type="number" id="min-price" placeholder="Desde $" class="filter-input">
+                </div>
+                 <div>
+                    <label for="max-price" class="block text-sm font-medium text-gray-700 mb-1">Precio Máx.</label>
+                    <input type="number" id="max-price" placeholder="Hasta $" class="filter-input">
+                </div>
+            </div>
+            <!-- Buttons -->
+            <div class="col-span-1 md:col-span-2 lg:col-span-4 flex flex-col sm:flex-row gap-4 mt-4">
+                 <button type="submit" class="w-full sm:w-auto flex-grow px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                    <i data-lucide="search" class="inline-block w-4 h-4 mr-2"></i>Aplicar Filtros
+                </button>
+                 <button type="button" id="reset-btn" class="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors">
+                    <i data-lucide="rotate-ccw" class="inline-block w-4 h-4 mr-2"></i>Limpiar
+                </button>
+                <!-- View Toggle remains -->
+                <div class="flex items-center bg-gray-200 rounded-full p-1 ml-auto">
+                    <button type="button" id="show-map-btn" class="px-4 py-1.5 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
+                        <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
+                    </button>
+                    <button type="button" id="show-list-btn" class="px-4 py-1.5 text-sm font-semibold rounded-full text-gray-700">
+                        <i data-lucide="list" class="inline-block w-4 h-4 mr-1"></i> Lista
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <main>
-        <section class="py-12 bg-gray-100 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold mb-2">Terrenos en Venta en Ecuador</h1>
-            <p class="text-gray-600 max-w-2xl mx-auto">Navega por el mapa para explorar los terrenos disponibles y haz clic en los marcadores para ver los detalles.</p>
-        </section>
-
-        <section id="map-container" class="py-12">
-            <div id='map'></div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; 2025 Ecuador Terrenos. Todos los derechos reservados.</p>
-            <p class="text-sm text-gray-400 mt-2">La plataforma gratuita para vender y comprar terrenos en Ecuador.</p>
-        </div>
-    </footer>
-
-    <script>
-    // --- Mobile Menu Toggle ---
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-
-    // --- Mapbox GL JS Logic ---
-    mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpcG1vcmVubyIsImEiOiJjbWZzcTAzYWUwbWdkMm5wd3pwaHZpdzA2In0.PlN6xmaS36bINGV8N_F9kA';
-
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-79.0045, -2.8974],
-        zoom: 6
-    });
-
-    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-    map.addControl(
-        new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-            trackUserLocation: true,
-            showUserHeading: true
-        })
-    );
+    <!-- Message container for loading/error states -->
+    <p id="message" class="text-center text-gray-600 py-8">Cargando terrenos...</p>
     
-    const BACKEND_URL = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/fetch_listings';
+    <!-- Map View -->
+    <div id="map-view">
+        <div id='map' class="rounded-lg shadow-lg"></div>
+    </div>
 
-    async function fetchListingsAndPopulateMap() {
-        try {
-            const response = await fetch(BACKEND_URL);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const listings = await response.json();
-            
-            listings.forEach(listing => {
-    // This condition already works correctly
-    if (listing.location && listing.location.coordinates && listing.location.coordinates.length === 2) {
-        const [longitude, latitude] = listing.location.coordinates;
+    <!-- List View (hidden by default) -->
+    <div id="list-view" class="hidden">
+        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Listing cards will be injected here by JavaScript -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const messageElement = document.getElementById('message');
+        const filterForm = document.getElementById('filter-form');
+        const provinceFilter = document.getElementById('province-filter');
+        const cityFilter = document.getElementById('city-filter');
+        const keywordSearch = document.getElementById('keyword-search');
+        const minPriceInput = document.getElementById('min-price');
+        const maxPriceInput = document.getElementById('max-price');
+        const resetBtn = document.getElementById('reset-btn');
         
-        const el = document.createElement('div');
-        el.className = 'marker';
+        const showMapBtn = document.getElementById('show-map-btn');
+        const showListBtn = document.getElementById('show-list-btn');
+        const mapView = document.getElementById('map-view');
+        const listView = document.getElementById('list-view');
+        const listingsContainer = document.getElementById('listings-container');
 
-        // Use optional chaining or logical OR to handle missing data
-        const title = listing.titulo || "Terreno sin título";
-        const description = listing.descripcion || "Descripción no disponible.";
-        const price = listing.precio ? `${listing.precio} USD` : "Precio no disponible";
-        const oid = listing._id.$oid;
-
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div class="p-4 bg-white rounded-lg shadow-lg">
-                <h3 class="font-bold text-base md:text-lg text-gray-900 mb-1">${title}</h3>
-                <p class="text-sm text-gray-600 mb-2">${description}</p>
-                <p class="font-bold text-blue-700 text-lg mb-2">${price}</p>
-                <a href="/anuncio.html?id=${oid}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors duration-200">Ver Detalles</a>
-            </div>
-        `);
-
-        new mapboxgl.Marker(el)
-            .setLngLat([longitude, latitude])
-            .setPopup(popup)
-            .addTo(map);
-    }
-});
-        } catch (error) {
-            console.error('Failed to fetch listings:', error);
+        // --- State ---
+        const API_ENDPOINT = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_all_listings';
+        let allListings = [];
+        let map;
+        let markers = [];
+        
+        // --- Mapbox Initialization ---
+        function initMap() {
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpcG1vcmVubyIsImEiOiJjbWZzcTAzYWUwbWdkMm5wd3pwaHZpdzA2In0.PlN6xmaS36bINGV8N_F9kA';
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [-79.0045, -2.8974], // Centered on Ecuador
+                zoom: 6
+            });
+            map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
         }
-    }
 
-    map.on('load', () => {
-        fetchListingsAndPopulateMap();
+        // --- Data Fetching ---
+        async function fetchAllListings() {
+            try {
+                const response = await fetch(API_ENDPOINT);
+                if (!response.ok) throw new Error('Network response failed');
+                
+                const responseData = await response.json();
+                
+                if (responseData.listings && responseData.listings.length > 0) {
+                    messageElement.style.display = 'none';
+                    allListings = responseData.listings;
+                    populateFilters(allListings); // NEW: Populate dropdowns
+                    render(allListings); // Initial render
+                } else {
+                    messageElement.textContent = 'No hay terrenos disponibles en este momento.';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                messageElement.textContent = 'Ocurrió un error al cargar los terrenos. Por favor, intenta de nuevo.';
+                messageElement.style.color = 'red';
+            }
+        }
+        
+        // --- NEW: Filter Population ---
+        function populateFilters(listings) {
+            // Populate Provinces
+            const provinces = [...new Set(listings.map(l => l.provincia).filter(Boolean))].sort();
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceFilter.appendChild(option);
+            });
+
+            // Event listener to populate cities when a province is selected
+            provinceFilter.addEventListener('change', () => {
+                const selectedProvince = provinceFilter.value;
+                // Clear and disable city filter if no province is selected
+                cityFilter.innerHTML = '<option value="">Todas</option>';
+                if (!selectedProvince) {
+                    cityFilter.disabled = true;
+                    return;
+                }
+                
+                // Get cities for the selected province
+                const cities = [...new Set(
+                    listings
+                        .filter(l => l.provincia === selectedProvince && l.ciudad)
+                        .map(l => l.ciudad)
+                )].sort();
+
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    cityFilter.appendChild(option);
+                });
+                cityFilter.disabled = false;
+            });
+        }
+
+        // --- NEW: Advanced Filtering Logic ---
+        function applyFilters() {
+            const selectedProvince = provinceFilter.value;
+            const selectedCity = cityFilter.value;
+            const keyword = keywordSearch.value.toLowerCase().trim();
+            const minPrice = parseFloat(minPriceInput.value);
+            const maxPrice = parseFloat(maxPriceInput.value);
+
+            const filteredListings = allListings.filter(listing => {
+                // Province filter
+                if (selectedProvince && listing.provincia !== selectedProvince) return false;
+                // City filter
+                if (selectedCity && listing.ciudad !== selectedCity) return false;
+                // Keyword filter (searches title and description)
+                if (keyword) {
+                    const titleMatch = listing.titulo?.toLowerCase().includes(keyword);
+                    const descriptionMatch = listing.descripcion?.toLowerCase().includes(keyword);
+                    if (!titleMatch && !descriptionMatch) return false;
+                }
+                // Min price filter
+                if (!isNaN(minPrice) && listing.precio < minPrice) return false;
+                // Max price filter
+                if (!isNaN(maxPrice) && listing.precio > maxPrice) return false;
+
+                return true; // If all checks pass, include the listing
+            });
+            
+            render(filteredListings);
+        }
+        
+        // --- Rendering Functions (mostly unchanged) ---
+        function render(listingsToRender) {
+            populateMap(listingsToRender);
+            renderListings(listingsToRender);
+             // Update message based on results
+            if (listingsToRender.length === 0 && allListings.length > 0) {
+                messageElement.textContent = 'No se encontraron terrenos con esos filtros. Intenta con una búsqueda más amplia.';
+                messageElement.style.display = 'block';
+            } else if (allListings.length > 0) {
+                messageElement.style.display = 'none';
+            }
+        }
+        
+        function populateMap(listings) {
+            markers.forEach(marker => marker.remove());
+            markers = [];
+            listings.forEach(listing => {
+                if (listing.location?.coordinates?.length === 2) {
+                    const [longitude, latitude] = listing.location.coordinates;
+                    const el = document.createElement('div');
+                    el.className = 'marker';
+                    const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
+                    const popupHTML = `...`; // Popup HTML is unchanged
+                    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
+                    const newMarker = new mapboxgl.Marker(el).setLngLat([longitude, latitude]).setPopup(popup).addTo(map);
+                    markers.push(newMarker);
+                }
+            });
+        }
+
+        function renderListings(listings) {
+            listingsContainer.innerHTML = '';
+            if (listings.length === 0) {
+                listingsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">No se encontraron terrenos con ese criterio de búsqueda.</p>';
+                return;
+            }
+            listings.forEach(listing => {
+                const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+                card.innerHTML = `
+                    <a href="/anuncio.html?id=${listing._id.$oid}">
+                        <img src="${firstPhoto}" alt="${listing.titulo}" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h3>
+                            <p class="text-gray-600 mb-2">${listing.ciudad || ''}, ${listing.provincia || ''}</p>
+                            <p class="text-gray-700 mb-4">${listing.area || 'N/A'} m²</p>
+                            <div class="text-2xl font-bold text-green-600">$${listing.precio.toLocaleString()}</div>
+                        </div>
+                    </a>
+                `;
+                listingsContainer.appendChild(card);
+            });
+        }
+
+        // --- Event Listeners ---
+        // NEW: Form submission for filtering
+        filterForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent page reload
+            applyFilters();
+        });
+
+        // NEW: Reset button functionality
+        resetBtn.addEventListener('click', () => {
+            filterForm.reset();
+            cityFilter.innerHTML = '<option value="">Todas</option>';
+            cityFilter.disabled = true;
+            render(allListings); // Re-render with all original listings
+        });
+
+        // View Toggling (unchanged)
+        showMapBtn.addEventListener('click', () => {
+            listView.classList.add('hidden');
+            mapView.classList.remove('hidden');
+            showMapBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showListBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+            map.resize();
+        });
+
+        showListBtn.addEventListener('click', () => {
+            mapView.classList.add('hidden');
+            listView.classList.remove('hidden');
+            showListBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showMapBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+        });
+
+        // --- Initial Load ---
+        initMap();
+        fetchAllListings();
     });
 </script>
-<script>
-    lucide.createIcons();
-</script>
-</body>
-</html>

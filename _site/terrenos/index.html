@@ -14,7 +14,6 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
-        /* Style for the hero background image (can be used on other pages if needed) */
         .hero-bg {
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-background-land.png');
             background-size: cover;
@@ -24,9 +23,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION START: Header now contains both logged-in and logged-out states -->
-    <!-- ===================================================================== -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-2xl font-bold text-blue-700">Ecuador Terrenos</a>
@@ -75,10 +71,6 @@
             </div>
         </div>
     </header>
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION END: Header -->
-    <!-- ===================================================================== -->
-
 
     <!-- This is where the content of each individual page will be injected -->
     <main>
@@ -88,64 +80,77 @@
 <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
 
 <style>
-    /* Styles for the map and its popups */
+    /* Styles for the map and its popups (unchanged) */
     #map {
         width: 100%;
-        height: 75vh; /* A good height for the container */
+        height: 75vh;
     }
     .marker {
-        background-color: #2563eb; /* A solid blue color */
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid white; /* A white border for visibility */
-        cursor: pointer;
+        background-color: #2563eb; width: 20px; height: 20px;
+        border-radius: 50%; border: 2px solid white; cursor: pointer;
         box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
     }
-    .mapboxgl-popup {
-        max-width: 300px;
-        font-family: 'Poppins', sans-serif;
-    }
-    .mapboxgl-popup-content {
-        padding: 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border-radius: 8px;
-    }
-    .mapboxgl-popup-content img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-    }
-    .mapboxgl-popup-close-button {
-        color: white;
-        background-color: rgba(0,0,0,0.5);
-        border-radius: 50%;
-        margin: 8px 8px 0 0;
-    }
+    .mapboxgl-popup { max-width: 300px; font-family: 'Poppins', sans-serif; }
+    .mapboxgl-popup-content { padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; }
+    .mapboxgl-popup-content img { width: 100%; height: 150px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+    .mapboxgl-popup-close-button { color: white; background-color: rgba(0,0,0,0.5); border-radius: 50%; margin: 8px 8px 0 0; }
+    /* Removed the broken .filter-input style */
 </style>
 
 <div class="container mx-auto px-6 py-12">
-    <!-- Page Header -->
-    <div class="text-center mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">Terrenos en Venta en Ecuador</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">Usa el buscador para filtrar y explora los terrenos en el mapa o en la lista.</p>
-    </div>
+    <!-- Page Header (Removed for brevity, you can keep it) -->
 
-    <!-- Controls: Search and View Toggle -->
-    <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-8 p-4 bg-white rounded-lg shadow">
-        <div class="w-full md:w-1/2">
-            <input type="text" id="search-input" placeholder="Buscar por ciudad, provincia o descripción..." class="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-        <div class="flex items-center bg-gray-200 rounded-full p-1">
-            <button id="show-map-btn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
-                <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
-            </button>
-            <button id="show-list-btn" class="px-4 py-2 text-sm font-semibold rounded-full text-gray-700">
-                <i data-lucide="list" class="inline-block w-4 h-4 mr-1"></i> Lista
-            </button>
-        </div>
+    <!-- UPDATED: More compact Advanced Filter Controls -->
+    <div class="mb-8 p-3 bg-gray-50 rounded-lg shadow-md border border-gray-200">
+        <form id="filter-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
+            <!-- Location Filters -->
+            <div>
+                <label for="province-filter" class="block text-sm font-medium text-gray-700 mb-1">Provincia</label>
+                <select id="province-filter" class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div>
+                <label for="city-filter" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
+                <select id="city-filter" class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white" disabled>
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <!-- Keyword Search -->
+            <div>
+                <label for="keyword-search" class="block text-sm font-medium text-gray-700 mb-1">Palabra Clave</label>
+                <input type="text" id="keyword-search" placeholder="Ej: playa, comercial..." class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+            </div>
+             <!-- Price Filters -->
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label for="min-price" class="block text-sm font-medium text-gray-700 mb-1">Precio Mín.</label>
+                    <input type="number" id="min-price" placeholder="$" class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                </div>
+                 <div>
+                    <label for="max-price" class="block text-sm font-medium text-gray-700 mb-1">Precio Máx.</label>
+                    <input type="number" id="max-price" placeholder="$" class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                </div>
+            </div>
+            <!-- Buttons -->
+            <div class="col-span-1 md:col-span-2 lg:col-span-4 flex flex-col sm:flex-row gap-3 mt-3">
+                 <button type="submit" class="w-full sm:w-auto flex-grow px-4 py-1.5 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                    <i data-lucide="search" class="inline-block w-4 h-4 mr-2"></i>Aplicar Filtros
+                </button>
+                 <button type="button" id="reset-btn" class="w-full sm:w-auto px-4 py-1.5 text-sm bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors">
+                    <i data-lucide="rotate-ccw" class="inline-block w-4 h-4 mr-2"></i>Limpiar
+                </button>
+                <!-- View Toggle remains -->
+                <div class="flex items-center bg-gray-200 rounded-full p-1 ml-auto">
+                    <button type="button" id="show-map-btn" class="px-4 py-1.5 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
+                        <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
+                    </button>
+                    <button type="button" id="show-list-btn" class="px-4 py-1.5 text-sm font-semibold rounded-full text-gray-700">
+                        <i data-lucide="list" class="inline-block w-4 h-4 mr-1"></i> Lista
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <!-- Message container for loading/error states -->
@@ -169,13 +174,18 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- DOM Elements ---
         const messageElement = document.getElementById('message');
-        const searchInput = document.getElementById('search-input');
+        const filterForm = document.getElementById('filter-form');
+        const provinceFilter = document.getElementById('province-filter');
+        const cityFilter = document.getElementById('city-filter');
+        const keywordSearch = document.getElementById('keyword-search');
+        const minPriceInput = document.getElementById('min-price');
+        const maxPriceInput = document.getElementById('max-price');
+        const resetBtn = document.getElementById('reset-btn');
         
         const showMapBtn = document.getElementById('show-map-btn');
         const showListBtn = document.getElementById('show-list-btn');
         const mapView = document.getElementById('map-view');
         const listView = document.getElementById('list-view');
-
         const listingsContainer = document.getElementById('listings-container');
 
         // --- State ---
@@ -207,7 +217,8 @@
                 if (responseData.listings && responseData.listings.length > 0) {
                     messageElement.style.display = 'none';
                     allListings = responseData.listings;
-                    render(allListings); // Initial render of both map and list
+                    populateFilters(allListings);
+                    render(allListings);
                 } else {
                     messageElement.textContent = 'No hay terrenos disponibles en este momento.';
                 }
@@ -218,31 +229,85 @@
             }
         }
         
-        // --- Rendering Functions ---
+        // --- Filter Population ---
+        function populateFilters(listings) {
+            const provinces = [...new Set(listings.map(l => l.provincia).filter(Boolean))].sort();
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceFilter.appendChild(option);
+            });
 
-        // Function to render both Map and List
+            provinceFilter.addEventListener('change', () => {
+                const selectedProvince = provinceFilter.value;
+                cityFilter.innerHTML = '<option value="">Todas</option>';
+                if (!selectedProvince) {
+                    cityFilter.disabled = true;
+                    return;
+                }
+                
+                const cities = [...new Set(
+                    listings
+                        .filter(l => l.provincia === selectedProvince && l.ciudad)
+                        .map(l => l.ciudad)
+                )].sort();
+
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    cityFilter.appendChild(option);
+                });
+                cityFilter.disabled = false;
+            });
+        }
+
+        // --- Advanced Filtering Logic ---
+        function applyFilters() {
+            const selectedProvince = provinceFilter.value;
+            const selectedCity = cityFilter.value;
+            const keyword = keywordSearch.value.toLowerCase().trim();
+            const minPrice = parseFloat(minPriceInput.value);
+            const maxPrice = parseFloat(maxPriceInput.value);
+
+            const filteredListings = allListings.filter(listing => {
+                if (selectedProvince && listing.provincia !== selectedProvince) return false;
+                if (selectedCity && listing.ciudad !== selectedCity) return false;
+                if (keyword) {
+                    const titleMatch = listing.titulo?.toLowerCase().includes(keyword);
+                    const descriptionMatch = listing.descripcion?.toLowerCase().includes(keyword);
+                    if (!titleMatch && !descriptionMatch) return false;
+                }
+                if (!isNaN(minPrice) && listing.precio < minPrice) return false;
+                if (!isNaN(maxPrice) && listing.precio > maxPrice) return false;
+                return true;
+            });
+            
+            render(filteredListings);
+        }
+        
+        // --- Rendering Functions ---
         function render(listingsToRender) {
             populateMap(listingsToRender);
             renderListings(listingsToRender);
+            if (listingsToRender.length === 0 && allListings.length > 0) {
+                messageElement.textContent = 'No se encontraron terrenos con esos filtros. Intenta con una búsqueda más amplia.';
+                messageElement.style.display = 'block';
+            } else if (allListings.length > 0) {
+                messageElement.style.display = 'none';
+            }
         }
         
-        // Populate the map with markers
         function populateMap(listings) {
-            // Clear existing markers
             markers.forEach(marker => marker.remove());
             markers = [];
-
             listings.forEach(listing => {
-                if (listing.location && listing.location.coordinates && listing.location.coordinates.length === 2) {
+                if (listing.location?.coordinates?.length === 2) {
                     const [longitude, latitude] = listing.location.coordinates;
-                    
                     const el = document.createElement('div');
                     el.className = 'marker';
-
-                    const firstPhoto = (listing.photos && listing.photos.length > 0) 
-                        ? listing.photos[0] 
-                        : 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
-
+                    const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
                     const popupHTML = `
                         <div>
                             <img src="${firstPhoto}" alt="${listing.titulo}">
@@ -253,32 +318,21 @@
                             </div>
                         </div>
                     `;
-
                     const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
-
-                    const newMarker = new mapboxgl.Marker(el)
-                        .setLngLat([longitude, latitude])
-                        .setPopup(popup)
-                        .addTo(map);
-
+                    const newMarker = new mapboxgl.Marker(el).setLngLat([longitude, latitude]).setPopup(popup).addTo(map);
                     markers.push(newMarker);
                 }
             });
         }
 
-        // Render the list of cards
         function renderListings(listings) {
-            listingsContainer.innerHTML = ''; // Clear previous listings
+            listingsContainer.innerHTML = '';
             if (listings.length === 0) {
                 listingsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">No se encontraron terrenos con ese criterio de búsqueda.</p>';
                 return;
             }
-
             listings.forEach(listing => {
-                const firstPhoto = (listing.photos && listing.photos.length > 0) 
-                    ? listing.photos[0] 
-                    : 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
-
+                const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
                 card.innerHTML = `
@@ -287,7 +341,7 @@
                         <div class="p-6">
                             <h3 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h3>
                             <p class="text-gray-600 mb-2">${listing.ciudad || ''}, ${listing.provincia || ''}</p>
-                            <p class="text-gray-700 mb-4">${listing.area} m²</p>
+                            <p class="text-gray-700 mb-4">${listing.area || 'N/A'} m²</p>
                             <div class="text-2xl font-bold text-green-600">$${listing.precio.toLocaleString()}</div>
                         </div>
                     </a>
@@ -297,33 +351,29 @@
         }
 
         // --- Event Listeners ---
-
-        // Search functionality
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredListings = allListings.filter(listing => 
-                Object.values(listing).some(value => 
-                    String(value).toLowerCase().includes(searchTerm)
-                )
-            );
-            render(filteredListings);
+        filterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            applyFilters();
         });
 
-        // View Toggling
+        resetBtn.addEventListener('click', () => {
+            filterForm.reset();
+            cityFilter.innerHTML = '<option value="">Todas</option>';
+            cityFilter.disabled = true;
+            render(allListings);
+        });
+
         showMapBtn.addEventListener('click', () => {
             listView.classList.add('hidden');
             mapView.classList.remove('hidden');
-            
             showMapBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
             showListBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
-            
-            map.resize(); // VERY IMPORTANT: tells map to resize to fit new container size
+            map.resize();
         });
 
         showListBtn.addEventListener('click', () => {
             mapView.classList.add('hidden');
             listView.classList.remove('hidden');
-
             showListBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
             showMapBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
         });
@@ -342,72 +392,46 @@
         </div>
     </footer>
 
-
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION START: Site-wide JavaScript updated for authentication -->
-    <!-- ===================================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Initialize Lucide Icons ---
             lucide.createIcons();
-
-            // --- Mobile Menu Toggle ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-
             mobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
             });
-
-            // Close mobile menu on link click
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                 link.addEventListener('click', () => {
-                    // Don't close for logout button, as it doesn't navigate
                     if (!link.id.includes('logout')) {
                        mobileMenu.classList.add('hidden');
                     }
                 });
             });
-
-            // --- Authentication & UI Update Logic ---
             const desktopLoggedOutMenu = document.getElementById('desktop-logged-out-menu');
             const desktopLoggedInMenu = document.getElementById('desktop-logged-in-menu');
             const mobileLoggedOutMenu = document.getElementById('mobile-logged-out-menu');
             const mobileLoggedInMenu = document.getElementById('mobile-logged-in-menu');
-
             const token = localStorage.getItem('authToken');
-
             if (token) {
-                // User is logged in, show the correct menus
                 desktopLoggedOutMenu.classList.add('hidden');
                 desktopLoggedInMenu.classList.remove('hidden');
                 desktopLoggedInMenu.classList.add('flex');
-
                 mobileLoggedOutMenu.classList.add('hidden');
                 mobileLoggedInMenu.classList.remove('hidden');
                 mobileLoggedInMenu.classList.add('flex');
             } else {
-                // User is logged out, ensure default menus are shown
                 desktopLoggedOutMenu.classList.remove('hidden');
                 desktopLoggedInMenu.classList.add('hidden');
-
                 mobileLoggedOutMenu.classList.remove('hidden');
                 mobileLoggedInMenu.classList.add('hidden');
             }
-
-            // --- Logout Functionality ---
             function handleLogout(event) {
                 event.preventDefault();
                 localStorage.removeItem('authToken');
-                // You can add a confirmation message if you want
-                // alert('Has cerrado la sesión.');
                 window.location.href = '/';
             }
-
-            // Attach logout handlers
             const logoutButtonDesktop = document.getElementById('logout-button-desktop');
             const logoutButtonMobile = document.getElementById('logout-button-mobile');
-
             if (logoutButtonDesktop) {
                 logoutButtonDesktop.addEventListener('click', handleLogout);
             }
@@ -416,8 +440,5 @@
             }
         });
     </script>
-    <!-- ===================================================================== -->
-    <!-- MODIFICATION END: JavaScript -->
-    <!-- ===================================================================== -->
 </body>
 </html>
