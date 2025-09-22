@@ -1,0 +1,81 @@
+---
+layout: "base.njk"
+---
+<!-- 
+  This is the dashboard layout. It wraps all pages within the /cuenta/ section.
+  It assumes any page using it requires a logged-in user.
+-->
+
+<!-- 
+  CRITICAL: Authentication Check
+  This script runs immediately. If the user doesn't have an authToken in localStorage,
+  it redirects them to the login page before they can see any of the protected content.
+-->
+<script>
+  if (!localStorage.getItem('authToken')) {
+    window.location.href = '/iniciar-session';
+  }
+</script>
+
+<div class="bg-gray-100">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col md:flex-row gap-8">
+
+            <!-- Sidebar Navigation -->
+            <aside class="w-full md:w-1/4 lg:w-1/5">
+                <div class="bg-white p-4 rounded-lg shadow-md sticky top-24">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Panel de Usuario</h2>
+                    <nav class="space-y-2">
+                        <a href="/cuenta/mis-terrenos" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors">
+                            <i data-lucide="layout-list" class="w-5 h-5 text-gray-500"></i>
+                            <span>Mis Anuncios</span>
+                        </a>
+                        <a href="/cuenta/nuevo-terreno" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors">
+                            <i data-lucide="plus-circle" class="w-5 h-5 text-gray-500"></i>
+                            <span>Publicar Nuevo</span>
+                        </a>
+                        <!-- Add more links here in the future, e.g., for profile settings -->
+                        <a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors opacity-50 cursor-not-allowed" aria-disabled="true" onclick="event.preventDefault()">
+                             <i data-lucide="user-cog" class="w-5 h-5 text-gray-500"></i>
+                             <span>Mi Perfil</span>
+                        </a>
+                        <div class="border-t my-2"></div>
+                        <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2 text-red-600 font-medium rounded-md hover:bg-red-100 transition-colors">
+                            <i data-lucide="log-out" class="w-5 h-5"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="w-full md:w-3/4 lg:w-4/5">
+                <!-- 
+                  The content from the specific page (e.g., mis-terrenos.njk) 
+                  will be injected here.
+                -->
+                {{ content | safe }}
+            </main>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Logout Functionality ---
+    const logoutButton = document.getElementById('logout-btn');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Remove the token from storage
+            localStorage.removeItem('authToken');
+            
+            // Redirect to the homepage
+            window.location.href = '/';
+        });
+    }
+
+    // Lucide icons will be initialized by the base.njk layout, but if you add icons dynamically
+    // like in mis-terrenos.njk, you might need to call lucide.createIcons() again.
+</script>

@@ -1,0 +1,6 @@
+functions-framework==3.*
+pymongo
+pyjwt 
+requests
+google-cloud-storage
+werkzeug

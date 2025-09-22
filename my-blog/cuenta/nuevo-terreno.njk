@@ -1,0 +1,147 @@
+---
+layout: "base.njk"
+title: "Publicar un Nuevo Terreno"
+---
+
+<style>
+    /* Re-using the same hero style for consistency */
+    .hero-bg-form {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/hero-background-land.png');
+        background-size: cover;
+        background-position: center;
+    }
+</style>
+
+<main>
+    <section class="hero-bg-form text-white py-20 text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold mb-4">Publica Tu Anuncio de Terreno</h1>
+            <p class="text-lg max-w-2xl mx-auto">Completa el formulario para publicar tu terreno. Estás conectado, así que el anuncio se guardará en tu cuenta.</p>
+        </div>
+    </section>
+
+    <section id="form" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="bg-white p-8 md:p-12 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-center">Detalles del Terreno</h2>
+                
+                <!-- This form uses the authenticated endpoint -->
+                <form id="listing-form" class="space-y-6">
+                    
+                    <div>
+                        <label for="titulo" class="block text-gray-700 font-semibold mb-2">Título del Anuncio <span class="text-red-500">*</span></label>
+                        <input type="text" id="titulo" name="titulo" placeholder="Ej: Terreno con vista al mar en Manta" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción Completa <span class="text-red-500">*</span></label>
+                        <textarea id="descripcion" name="descripcion" rows="6" placeholder="Describe los detalles: uso de suelo, servicios, atractivos cercanos, etc." required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="provincia" class="block text-gray-700 font-semibold mb-2">Provincia <span class="text-red-500">*</span></label>
+                            <input type="text" id="provincia" name="provincia" placeholder="Manabí" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="ciudad" class="block text-gray-700 font-semibold mb-2">Ciudad/Cantón <span class="text-red-500">*</span></label>
+                            <input type="text" id="ciudad" name="ciudad" placeholder="Manta" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="direccion" class="block text-gray-700 font-semibold mb-2">Dirección o Sector <span class="text-red-500">*</span></label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Sector Umiña, cerca del malecón" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="area" class="block text-gray-700 font-semibold mb-2">Área (m²) <span class="text-red-500">*</span></label>
+                            <input type="number" id="area" name="area" placeholder="500" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="precio" class="block text-gray-700 font-semibold mb-2">Precio (USD) <span class="text-red-500">*</span></label>
+                            <input type="number" id="precio" name="precio" placeholder="25000" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    
+                    <!-- MODIFICATION: Contact fields are removed because the user is logged in. -->
+                    <!-- The backend will automatically use the logged-in user's details. -->
+
+                    <div>
+                        <label for="fotos" class="block text-gray-700 font-semibold mb-2">Subir Fotos (hasta 8)</label>
+                        <input type="file" id="fotos" name="fotos" accept="image/*" multiple class="w-full p-3 border border-gray-300 rounded-md file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="text-sm text-gray-500 mt-1">Fotos de alta calidad atraen más compradores.</p>
+                    </div>
+
+                    <div class="text-center pt-4">
+                        <button id="submit-btn" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 w-full md:w-auto">
+                            Publicar Mi Anuncio
+                        </button>
+                        <p id="message" class="mt-4 text-sm"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Using the secure, authenticated JavaScript from new_listing.html -->
+<script>
+    const form = document.getElementById('listing-form');
+    const messageElement = document.getElementById('message');
+    const submitButton = document.getElementById('submit-btn');
+    const API_ENDPOINT_URL = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/submit_listing_v2';
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Disable button to prevent multiple submissions
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+        messageElement.textContent = '';
+        messageElement.className = '';
+
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            messageElement.textContent = 'Error: No has iniciado sesión. Por favor, inicia sesión e inténtalo de nuevo.';
+            messageElement.className = 'text-red-600';
+            submitButton.disabled = false;
+            submitButton.textContent = 'Publicar Mi Anuncio';
+            // Optional: Redirect to login page
+            // window.location.href = '/iniciar-session';
+            return;
+        }
+
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetch(API_ENDPOINT_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData,
+            });
+            
+            const result = await response.json();
+
+            if (response.ok) {
+                messageElement.textContent = '¡Anuncio publicado con éxito! Serás redirigido a tus anuncios.';
+                messageElement.className = 'text-green-600';
+                form.reset();
+                // Redirect user to their listings page after success
+                setTimeout(() => {
+                    window.location.href = '/cuenta/mis-terrenos';
+                }, 2000);
+            } else {
+                messageElement.textContent = `Error: ${result.message || 'El envío falló.'}`;
+                messageElement.className = 'text-red-600';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Publicar Mi Anuncio';
+            }
+        } catch (error) {
+            console.error('Submission failed:', error);
+            messageElement.textContent = 'Ocurrió un error de red. Por favor, revisa tu conexión e inténtalo de nuevo.';
+            messageElement.className = 'text-red-600';
+            submitButton.disabled = false;
+            submitButton.textContent = 'Publicar Mi Anuncio';
+        }
+    });
+</script>

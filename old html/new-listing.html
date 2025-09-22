@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Listing</title>
+</head>
+<body>
+    <h1>Create a New Listing</h1>
+    <form id="listing-form">
+        <div>
+            <label for="titulo">Title</label>
+            <input type="text" id="titulo" name="titulo" required>
+        </div>
+        <div>
+            <label for="descripcion">Description</label>
+            <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+        </div>
+        <div>
+            <label for="provincia">Provincia</label>
+            <input type="text" id="provincia" name="provincia" required>
+        </div>
+        <div>
+            <label for="ciudad">Ciudad</label>
+            <input type="text" id="ciudad" name="ciudad" required>
+        </div>
+        <div>
+            <label for="direccion">Address</label>
+            <input type="text" id="direccion" name="direccion" required>
+        </div>
+        <div>
+            <label for="area">Area (m²)</label>
+            <input type="number" id="area" name="area" required>
+        </div>
+        <div>
+            <label for="precio">Price ($)</label>
+            <input type="number" id="precio" name="precio" required>
+        </div>
+        <div>
+            <label for="fotos">Photos (upload up to 8)</label>
+            <input type="file" id="fotos" name="fotos" accept="image/*" multiple>
+        </div>
+        <button type="submit">Submit Listing</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        const form = document.getElementById('listing-form');
+        const messageElement = document.getElementById('message');
+        const API_ENDPOINT_URL = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/submit_listing_v2';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                messageElement.textContent = 'You are not logged in. Please log in to post a listing.';
+                return;
+            }
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(API_ENDPOINT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData,
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageElement.textContent = 'Listing submitted successfully!';
+                    messageElement.style.color = 'green';
+                    form.reset();
+                } else {
+                    messageElement.textContent = `Error: ${result.message || 'Submission failed.'}`;
+                    messageElement.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Submission failed:', error);
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

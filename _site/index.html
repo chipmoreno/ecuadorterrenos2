@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecuador Terrenos | Anuncios Gratuitos de Terrenos en Ecuador | Ecuador Terrenos</title>
+    <meta name="description" content="La forma más inteligente de vender su terreno en Ecuador. Ofrecemos marketing digital profesional y gratuito para conectar su propiedad con compradores calificados.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Style for the hero background image (can be used on other pages if needed) */
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-background-land.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION START: Header now contains both logged-in and logged-out states -->
+    <!-- ===================================================================== -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-blue-700">Ecuador Terrenos</a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <!-- Logged-Out Links -->
+                <div id="desktop-logged-out-menu" class="flex space-x-6 items-center">
+                    <a href="/terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Ver Terrenos</a>
+                    <a href="/#anunciar" class="text-gray-600 hover:text-blue-700 font-medium">Cómo Funciona</a>
+                    <a href="/iniciar-session" class="text-gray-600 hover:text-blue-700 font-medium">Iniciar Sesión</a>
+                    <a href="/registrarse" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Publica Tu Anuncio GRATIS</a>
+                </div>
+                <!-- Logged-In Links (Initially hidden) -->
+                <div id="desktop-logged-in-menu" class="hidden space-x-6 items-center">
+                     <a href="/terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Ver Terrenos</a>
+                     <a href="/cuenta/mis-terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Mis Anuncios</a>
+                     <a href="#" id="logout-button-desktop" class="text-gray-600 hover:text-red-600 font-medium">Cerrar Sesión</a>
+                     <a href="/cuenta/nuevo-terreno" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">Publicar Nuevo Terreno</a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+             <!-- Logged-Out Links -->
+            <div id="mobile-logged-out-menu" class="flex flex-col space-y-2">
+                <a href="/terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Ver Terrenos</a>
+                <a href="/#anunciar" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Cómo Funciona</a>
+                <a href="/iniciar-session" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Iniciar Sesión</a>
+                <a href="/registrarse" class="block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 text-center mt-2">Publica Tu Anuncio GRATIS</a>
+            </div>
+             <!-- Logged-In Links (Initially hidden) -->
+            <div id="mobile-logged-in-menu" class="hidden flex-col space-y-2">
+                <a href="/terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Ver Terrenos</a>
+                <a href="/cuenta/mis-terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Mis Anuncios</a>
+                <a href="/cuenta/nuevo-terreno" class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 text-center mt-2">Publicar Nuevo Terreno</a>
+                <div class="border-t pt-2 mt-2">
+                    <a href="#" id="logout-button-mobile" class="block text-red-600 font-medium py-2 text-center">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION END: Header -->
+    <!-- ===================================================================== -->
+
+
+    <!-- This is where the content of each individual page will be injected -->
+    <main>
+        <!-- 
+    MODIFICATION: 
+    The entire <head>, <body>, <header>, <footer>, and <script> tags have been removed.
+    They will now live in your `_includes/base.njk` layout file. 
+    This file now ONLY contains the content specific to the homepage.
+-->
+
+<main>
+    <section id="home" class="hero-bg text-white h-[90vh] flex items-center justify-center text-center">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">Vende Tu Terreno en Ecuador. ¡Sin Costos Ni Comisiones!</h1>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">La única plataforma que te permite publicar tu terreno completamente gratis. ¡Olvídate de comisiones y tarifas ocultas!</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <!-- 
+                    MODIFICATION: The main CTA now points to the registration page.
+                    This is the most important link on the entire site. It starts the seller's journey.
+                -->
+                <a href="/registrarse" class="bg-green-500 hover:bg-green-600 text-white font-bold py-5 px-10 rounded-full transition duration-300 flex items-center gap-2 w-full sm:w-auto justify-center text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-megaphone"><path d="m3 11 18-5v12L3 18v-7Z"/><path d="M11.6 16.8a2.95 2.95 0 0 1-5.1 0"/><path d="M14 15.3a4.5 4.5 0 0 1-7.8 0"/><path d="M17.7 13.8a6.8 6.8 0 0 1-11.7 0"/></svg>
+                    Publicar Mi Terreno GRATIS
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The "How it works" section is perfect as is. No changes needed here. -->
+    <section id="anunciar" class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-2">Anuncia Tu Terreno Gratis y Sin Complicaciones</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl mx-auto">Vender tu terreno nunca fue tan fácil. Con EcuadorTerrenos.com, llegas a una audiencia interesada sin pagar un centavo.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Step 1 Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="edit" class="text-blue-600 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Paso 1: Crea Tu Anuncio</h3>
+                    <p class="text-gray-600">Completa un formulario sencillo con los detalles de tu terreno. Agrega fotos, ubicación y cualquier información relevante para los compradores.</p>
+                </div>
+                <!-- Step 2 Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="users" class="text-yellow-600 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Paso 2: Llega a Compradores</h3>
+                    <p class="text-gray-600">Tu anuncio se publica en nuestro sitio web, donde miles de interesados en bienes raíces en Ecuador buscan su próximo terreno.</p>
+                </div>
+                <!-- Step 3 Card -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                   <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="wallet" class="text-green-600 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Paso 3: Vende Sin Comisiones</h3>
+                    <p class="text-gray-600">Nosotros no cobramos comisión por la venta. Los compradores te contactan directamente para negociar y cerrar el trato. ¡Es 100% tuyo!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+        MODIFICATION: New "Featured Listings" section.
+        This section shows visitors that the site is active and gives sellers a preview.
+        You will need to feed this section with data from your backend.
+        This example uses placeholder content.
+    -->
+    <section id="featured" class="py-20 bg-blue-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">Terrenos Recién Publicados</h2>
+                <p class="text-gray-600">Echa un vistazo a las últimas propiedades añadidas por nuestra comunidad.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Example Listing Card 1 (Repeat this block for each listing) -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="images/land-gallery-1.png" alt="Terreno en venta en Manta" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Terreno con Vista al Mar en Manta</h3>
+                        <p class="text-gray-600 mb-4">1,200 m² - Perfecto para proyecto residencial.</p>
+                        <div class="text-2xl font-bold text-green-600">$45,000</div>
+                    </div>
+                </div>
+                <!-- Example Listing Card 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="images/land-gallery-2.png" alt="Terreno en venta en Cotopaxi" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Hacienda Productiva Cerca de Cotopaxi</h3>
+                        <p class="text-gray-600 mb-4">5 Hectáreas - Ideal para agricultura o turismo.</p>
+                        <div class="text-2xl font-bold text-green-600">$120,000</div>
+                    </div>
+                </div>
+                <!-- Example Listing Card 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                    <img src="images/land-gallery-3.png" alt="Terreno en venta en Cumbayá" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Lote Urbano en Cumbayá</h3>
+                        <p class="text-gray-600 mb-4">800 m² - Dentro de urbanización privada.</p>
+                        <div class="text-2xl font-bold text-green-600">$95,000</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="/terrenos" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-lg">
+                    Ver todos los terrenos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About section is great. No changes needed. -->
+    <section id="about" class="py-20 bg-white">
+        <!-- ... your existing "Acerca de Ecuador Terrenos" section ... -->
+    </section>
+
+    <!-- Why Choose Us section is great. No changes needed. -->
+    <section class="py-20 bg-gray-50">
+        <!-- ... your existing "Por Qué Elegirnos?" section ... -->
+    </section>
+
+    <!-- Testimonials section is great. No changes needed. -->
+    <section id="testimonials" class="py-20 bg-white">
+         <!-- ... your existing "Lo Que Dicen Nuestros Usuarios" section ... -->
+    </section>
+
+    <!-- Final CTA Section -->
+    <section id="contact" class="py-20 bg-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-2">¡Empieza a Vender Hoy Mismo!</h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">Publica tu anuncio ahora y conecta con miles de compradores potenciales. ¡Es rápido, fácil y completamente gratis!</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <!-- 
+                    MODIFICATION: This final CTA is crucial.
+                    It should also point to the registration page, NOT a mailto: link.
+                    A mailto: link creates friction and lowers conversion rates significantly.
+                -->
+                <a href="/registrarse" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full transition duration-300 flex items-center gap-2 w-full sm:w-auto justify-center text-xl">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Crear mi Anuncio Ahora
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Ecuador Terrenos. Todos los derechos reservados.</p>
+            <p class="text-sm text-gray-400 mt-2">La plataforma gratuita para vender y comprar terrenos en Ecuador.</p>
+        </div>
+    </footer>
+
+
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION START: Site-wide JavaScript updated for authentication -->
+    <!-- ===================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Initialize Lucide Icons ---
+            lucide.createIcons();
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    // Don't close for logout button, as it doesn't navigate
+                    if (!link.id.includes('logout')) {
+                       mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // --- Authentication & UI Update Logic ---
+            const desktopLoggedOutMenu = document.getElementById('desktop-logged-out-menu');
+            const desktopLoggedInMenu = document.getElementById('desktop-logged-in-menu');
+            const mobileLoggedOutMenu = document.getElementById('mobile-logged-out-menu');
+            const mobileLoggedInMenu = document.getElementById('mobile-logged-in-menu');
+
+            const token = localStorage.getItem('authToken');
+
+            if (token) {
+                // User is logged in, show the correct menus
+                desktopLoggedOutMenu.classList.add('hidden');
+                desktopLoggedInMenu.classList.remove('hidden');
+                desktopLoggedInMenu.classList.add('flex');
+
+                mobileLoggedOutMenu.classList.add('hidden');
+                mobileLoggedInMenu.classList.remove('hidden');
+                mobileLoggedInMenu.classList.add('flex');
+            } else {
+                // User is logged out, ensure default menus are shown
+                desktopLoggedOutMenu.classList.remove('hidden');
+                desktopLoggedInMenu.classList.add('hidden');
+
+                mobileLoggedOutMenu.classList.remove('hidden');
+                mobileLoggedInMenu.classList.add('hidden');
+            }
+
+            // --- Logout Functionality ---
+            function handleLogout(event) {
+                event.preventDefault();
+                localStorage.removeItem('authToken');
+                // You can add a confirmation message if you want
+                // alert('Has cerrado la sesión.');
+                window.location.href = '/';
+            }
+
+            // Attach logout handlers
+            const logoutButtonDesktop = document.getElementById('logout-button-desktop');
+            const logoutButtonMobile = document.getElementById('logout-button-mobile');
+
+            if (logoutButtonDesktop) {
+                logoutButtonDesktop.addEventListener('click', handleLogout);
+            }
+            if (logoutButtonMobile) {
+                logoutButtonMobile.addEventListener('click', handleLogout);
+            }
+        });
+    </script>
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION END: JavaScript -->
+    <!-- ===================================================================== -->
+</body>
+</html>

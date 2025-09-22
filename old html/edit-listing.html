@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Listing</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: auto; background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #333; }
+        form div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        textarea { resize: vertical; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background-color: #0056b3; }
+        #message { margin-top: 15px; text-align: center; font-size: 1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Listing</h1>
+        <form id="edit-form">
+            <div>
+                <label for="titulo">Title</label>
+                <input type="text" id="titulo" name="titulo" required>
+            </div>
+            <div>
+                <label for="descripcion">Description</label>
+                <textarea id="descripcion" name="descripcion" rows="5" required></textarea>
+            </div>
+            <div>
+                <label for="provincia">Provincia</label>
+                <input type="text" id="provincia" name="provincia" required>
+            </div>
+            <div>
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" required>
+            </div>
+            <div>
+                <label for="direccion">Address</label>
+                <input type="text" id="direccion" name="direccion" required>
+            </div>
+            <div>
+                <label for="area">Area (m²)</label>
+                <input type="number" id="area" name="area" required>
+            </div>
+            <div>
+                <label for="precio">Price ($)</label>
+                <input type="number" id="precio" name="precio" required>
+            </div>
+            <div>
+                <button type="submit">Update Listing</button>
+            </div>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('edit-form');
+        const messageElement = document.getElementById('message');
+        
+        const updateEndpoint = `https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/edit_listing`;
+
+        let listingId;
+
+        // Function to get the listing ID from the URL
+        function getListingIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Function to fetch and pre-populate the form
+        async function fetchListingDetails() {
+            listingId = getListingIdFromUrl();
+            if (!listingId) {
+                messageElement.textContent = 'Error: No listing ID found in URL.';
+                return;
+            }
+
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                messageElement.textContent = 'You are not logged in.';
+                return;
+            }
+
+            try {
+                // Assuming you have a get_listing endpoint for a single listing
+                const response = await fetch(`https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_my_listings/${listingId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const listing = await response.json();
+                    // Pre-populate the form with current data
+                    document.getElementById('titulo').value = listing.titulo || '';
+                    document.getElementById('descripcion').value = listing.descripcion || '';
+                    document.getElementById('provincia').value = listing.provincia || '';
+                    document.getElementById('ciudad').value = listing.ciudad || '';
+                    document.getElementById('direccion').value = listing.direccion || '';
+                    document.getElementById('area').value = listing.area || '';
+                    document.getElementById('precio').value = listing.precio || '';
+                } else {
+                    messageElement.textContent = 'Could not load listing details.';
+                }
+            } catch (error) {
+                messageElement.textContent = 'An error occurred fetching listing details.';
+                console.error('Fetch error:', error);
+            }
+        }
+
+        // Handle form submission for updates
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                messageElement.textContent = 'You are not logged in.';
+                return;
+            }
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+
+            try {
+                // CORRECTED LINE: Change from path parameter to query parameter
+                const response = await fetch(`${updateEndpoint}?listingId=${listingId}`, {
+                    method: 'PATCH', // Use PUT or PATCH for updates
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    messageElement.textContent = 'Listing updated successfully!';
+                    messageElement.style.color = 'green';
+                    // Optional: Redirect back to my listings page
+                    // window.location.href = 'my_listings.html';
+                } else {
+                    const errorData = await response.json();
+                    messageElement.textContent = `Error: ${errorData.message || 'Could not update listing.'}`;
+                    messageElement.style.color = 'red';
+                }
+            } catch (error) {
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.style.color = 'red';
+                console.error('Update error:', error);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchListingDetails);
+    </script>
+</body>
+</html>

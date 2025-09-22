@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body { font-family: sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .login-container { background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 100%; max-width: 400px; text-align: center; }
+    h1 { color: #333; margin-bottom: 20px; }
+    form { display: flex; flex-direction: column; }
+    label { text-align: left; margin-bottom: 5px; color: #555; }
+    input { padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+    button { padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }
+    button:hover { background-color: #0056b3; }
+    button:disabled { background-color: #ccc; cursor: not-allowed; }
+    #message { margin-top: 20px; font-size: 14px; }
+    .success { color: green; }
+    .error { color: red; }
+    .google-login-separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+        color: #888;
+        font-size: 12px;
+    }
+    .google-login-separator::before,
+    .google-login-separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+    }
+    .google-login-separator:not(:empty)::before {
+        margin-right: .5em;
+    }
+    .google-login-separator:not(:empty)::after {
+        margin-left: .5em;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login to Your Account</h1>
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      
+      <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+
+    <div class="google-login-separator">or</div>
+    
+    <div id="g_id_onload"
+         data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <script>
+    // Traditional login form logic
+    const form = document.getElementById('loginForm');
+    const messageElement = document.getElementById('message');
+    const submitButton = form.querySelector('button');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); 
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      submitButton.disabled = true;
+      messageElement.textContent = 'Logging in...';
+      messageElement.className = '';
+
+      const data = { email, password };
+
+      try {
+        const apiEndpoint = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/login_user'; 
+
+        const response = await fetch(apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        const responseData = await response.json();
+
+        if (response.ok) {
+          messageElement.textContent = 'Login successful!';
+          messageElement.className = 'success';
+          
+          localStorage.setItem('authToken', responseData.token);
+
+          const savedToken = localStorage.getItem('authToken');
+          console.log('Token saved to local storage:', savedToken);
+          
+          // Redirect the user
+          // window.location.href = '/my_listings.html';
+        } else {
+          messageElement.textContent = responseData.message || 'Login failed.';
+          messageElement.className = 'error';
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        messageElement.textContent = 'An error occurred. Please try again later.';
+        messageElement.className = 'error';
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    // Google Sign-In callback function
+    function handleCredentialResponse(response) {
+      const idToken = response.credential;
+      
+      // The fetch request to your backend to verify the token
+      fetch('https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/google_login', {
+          method: 'POST',
+          headers: { 
+              'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({ token: idToken })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.token) {
+              console.log('Google login successful:', data);
+              // Save your own generated JWT to local storage
+              localStorage.setItem('authToken', data.token);
+              // Redirect the user to their listings page
+              window.location.href = 'my_listings.html';
+          } else {
+              console.error('Google login failed:', data.message);
+              // Display the error message to the user
+              messageElement.textContent = data.message || 'Login with Google failed.';
+              messageElement.className = 'error';
+          }
+      })
+      .catch(error => {
+          console.error('Login failed:', error);
+          messageElement.textContent = 'An error occurred. Please try again later.';
+          messageElement.className = 'error';
+      });
+    }
+  </script>
+</body>
+</html>

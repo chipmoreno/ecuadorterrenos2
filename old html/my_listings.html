@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { text-align: center; color: #333; }
+        .action-bar { text-align: center; margin-bottom: 20px; }
+        .new-listing-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .new-listing-btn:hover { background-color: #218838; }
+        #message { text-align: center; font-size: 1.2em; color: #555; margin-top: 20px; }
+        #listings-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .listing-card { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.2s; position: relative; }
+        .listing-card:hover { transform: translateY(-5px); }
+        .listing-card h2 { margin-top: 0; color: #007bff; }
+        .listing-card p { margin: 5px 0; }
+        .listing-card img { max-width: 100%; height: auto; border-radius: 4px; margin-top: 10px; }
+        .actions { margin-top: 15px; text-align: right; }
+        .edit-btn, .delete-btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .edit-btn { background-color: #ffc107; color: #333; margin-right: 5px; }
+        .delete-btn { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Listings</h1>
+        <div class="action-bar">
+            <a href="new-listing.html" class="new-listing-btn">Publicar Nuevo Anuncio</a>
+        </div>
+        <p id="message">Loading listings...</p>
+        <div id="listings-container"></div>
+    </div>
+
+    <script>
+        const listingsContainer = document.getElementById('listings-container');
+        const messageElement = document.getElementById('message');
+        const apiEndpoint = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_my_listings';
+
+        async function fetchListings() {
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                messageElement.textContent = 'You are not logged in. Please log in to view your listings.';
+                messageElement.style.color = 'red';
+                return;
+            }
+
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    
+                    if (responseData.listings && responseData.listings.length > 0) {
+                        messageElement.style.display = 'none';
+                        renderListings(responseData.listings);
+                    } else {
+                        messageElement.textContent = 'You have no listings yet.';
+                    }
+                } else {
+                    const errorData = await response.json();
+                    messageElement.textContent = `Error: ${errorData.message || 'Could not fetch listings.'}`;
+                    messageElement.style.color = 'red';
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.style.color = 'red';
+            }
+        }
+
+        function renderListings(listings) {
+            listings.forEach(listing => {
+                const card = document.createElement('div');
+                card.className = 'listing-card';
+                card.innerHTML = `
+                    <h2>${listing.titulo}</h2>
+                    <p><strong>Price:</strong> $${listing.precio}</p>
+                    <p><strong>Location:</strong> ${listing.direccion}</p>
+                    <p><strong>Area:</strong> ${listing.area} m²</p>
+                    <p>${listing.descripcion}</p>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="window.location.href='edit-listing.html?id=${listing._id}'">Edit</button>
+                        <button class="delete-btn" onclick="deleteListing('${listing._id}')">Delete</button>
+                    </div>
+                `;
+                
+                if (listing.photos && listing.photos.length > 0) {
+                    const photo = document.createElement('img');
+                    photo.src = listing.photos[0];
+                    photo.alt = listing.titulo;
+                    card.appendChild(photo);
+                }
+
+                listingsContainer.appendChild(card);
+            });
+        }
+
+        async function deleteListing(listingId) {
+            if (confirm('Are you sure you want to delete this listing?')) {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+
+                const deleteEndpoint = `https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/delete_listing?listingId=${listingId}`;
+
+                try {
+                    const response = await fetch(deleteEndpoint, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Listing deleted successfully!');
+                        window.location.reload(); // Reload the page to show the updated list
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error deleting listing: ${errorData.message || 'Unknown error.'}`);
+                    }
+                } catch (error) {
+                    console.error('Delete error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchListings);
+    </script>
+</body>
+</html>

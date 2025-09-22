@@ -1,0 +1,255 @@
+---
+layout: "base.njk"
+title: "Explora Terrenos en Venta en Ecuador"
+---
+
+<!-- Mapbox GL JS and CSS (Specific to this page) -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+    /* Styles for the map and its popups */
+    #map {
+        width: 100%;
+        height: 75vh; /* A good height for the container */
+    }
+    .marker {
+        background-color: #2563eb; /* A solid blue color */
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid white; /* A white border for visibility */
+        cursor: pointer;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+    }
+    .mapboxgl-popup {
+        max-width: 300px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .mapboxgl-popup-content {
+        padding: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 8px;
+    }
+    .mapboxgl-popup-content img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .mapboxgl-popup-close-button {
+        color: white;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+        margin: 8px 8px 0 0;
+    }
+</style>
+
+<div class="container mx-auto px-6 py-12">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Terrenos en Venta en Ecuador</h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">Usa el buscador para filtrar y explora los terrenos en el mapa o en la lista.</p>
+    </div>
+
+    <!-- Controls: Search and View Toggle -->
+    <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-8 p-4 bg-white rounded-lg shadow">
+        <div class="w-full md:w-1/2">
+            <input type="text" id="search-input" placeholder="Buscar por ciudad, provincia o descripción..." class="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div class="flex items-center bg-gray-200 rounded-full p-1">
+            <button id="show-map-btn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
+                <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
+            </button>
+            <button id="show-list-btn" class="px-4 py-2 text-sm font-semibold rounded-full text-gray-700">
+                <i data-lucide="list" class="inline-block w-4 h-4 mr-1"></i> Lista
+            </button>
+        </div>
+    </div>
+
+    <!-- Message container for loading/error states -->
+    <p id="message" class="text-center text-gray-600 py-8">Cargando terrenos...</p>
+    
+    <!-- Map View -->
+    <div id="map-view">
+        <div id='map' class="rounded-lg shadow-lg"></div>
+    </div>
+
+    <!-- List View (hidden by default) -->
+    <div id="list-view" class="hidden">
+        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Listing cards will be injected here by JavaScript -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const messageElement = document.getElementById('message');
+        const searchInput = document.getElementById('search-input');
+        
+        const showMapBtn = document.getElementById('show-map-btn');
+        const showListBtn = document.getElementById('show-list-btn');
+        const mapView = document.getElementById('map-view');
+        const listView = document.getElementById('list-view');
+
+        const listingsContainer = document.getElementById('listings-container');
+
+        // --- State ---
+        const API_ENDPOINT = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_all_listings';
+        let allListings = [];
+        let map;
+        let markers = [];
+        
+        // --- Mapbox Initialization ---
+        function initMap() {
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpcG1vcmVubyIsImEiOiJjbWZzcTAzYWUwbWdkMm5wd3pwaHZpdzA2In0.PlN6xmaS36bINGV8N_F9kA';
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [-79.0045, -2.8974], // Centered on Ecuador
+                zoom: 6
+            });
+            map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+        }
+
+        // --- Data Fetching ---
+        async function fetchAllListings() {
+            try {
+                const response = await fetch(API_ENDPOINT);
+                if (!response.ok) throw new Error('Network response failed');
+                
+                const responseData = await response.json();
+                
+                if (responseData.listings && responseData.listings.length > 0) {
+                    messageElement.style.display = 'none';
+                    allListings = responseData.listings;
+                    render(allListings); // Initial render of both map and list
+                } else {
+                    messageElement.textContent = 'No hay terrenos disponibles en este momento.';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                messageElement.textContent = 'Ocurrió un error al cargar los terrenos. Por favor, intenta de nuevo.';
+                messageElement.style.color = 'red';
+            }
+        }
+        
+        // --- Rendering Functions ---
+
+        // Function to render both Map and List
+        function render(listingsToRender) {
+            populateMap(listingsToRender);
+            renderListings(listingsToRender);
+        }
+        
+        // Populate the map with markers
+        function populateMap(listings) {
+            // Clear existing markers
+            markers.forEach(marker => marker.remove());
+            markers = [];
+
+            listings.forEach(listing => {
+                if (listing.location && listing.location.coordinates && listing.location.coordinates.length === 2) {
+                    const [longitude, latitude] = listing.location.coordinates;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'marker';
+
+                    const firstPhoto = (listing.photos && listing.photos.length > 0) 
+                        ? listing.photos[0] 
+                        : 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
+
+                    const popupHTML = `
+                        <div>
+                            <img src="${firstPhoto}" alt="${listing.titulo}">
+                            <div class="p-3">
+                                <h3 class="font-bold text-base text-gray-900 mb-1">${listing.titulo}</h3>
+                                <p class="font-bold text-blue-700 text-lg mb-2">$${listing.precio.toLocaleString()}</p>
+                                <a href="/anuncio.html?id=${listing._id.$oid}" class="text-sm font-semibold text-blue-600 hover:underline">Ver Detalles &rarr;</a>
+                            </div>
+                        </div>
+                    `;
+
+                    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
+
+                    const newMarker = new mapboxgl.Marker(el)
+                        .setLngLat([longitude, latitude])
+                        .setPopup(popup)
+                        .addTo(map);
+
+                    markers.push(newMarker);
+                }
+            });
+        }
+
+        // Render the list of cards
+        function renderListings(listings) {
+            listingsContainer.innerHTML = ''; // Clear previous listings
+            if (listings.length === 0) {
+                listingsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">No se encontraron terrenos con ese criterio de búsqueda.</p>';
+                return;
+            }
+
+            listings.forEach(listing => {
+                const firstPhoto = (listing.photos && listing.photos.length > 0) 
+                    ? listing.photos[0] 
+                    : 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+                card.innerHTML = `
+                    <a href="/anuncio.html?id=${listing._id.$oid}">
+                        <img src="${firstPhoto}" alt="${listing.titulo}" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h3>
+                            <p class="text-gray-600 mb-2">${listing.ciudad || ''}, ${listing.provincia || ''}</p>
+                            <p class="text-gray-700 mb-4">${listing.area} m²</p>
+                            <div class="text-2xl font-bold text-green-600">$${listing.precio.toLocaleString()}</div>
+                        </div>
+                    </a>
+                `;
+                listingsContainer.appendChild(card);
+            });
+        }
+
+        // --- Event Listeners ---
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredListings = allListings.filter(listing => 
+                Object.values(listing).some(value => 
+                    String(value).toLowerCase().includes(searchTerm)
+                )
+            );
+            render(filteredListings);
+        });
+
+        // View Toggling
+        showMapBtn.addEventListener('click', () => {
+            listView.classList.add('hidden');
+            mapView.classList.remove('hidden');
+            
+            showMapBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showListBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+            
+            map.resize(); // VERY IMPORTANT: tells map to resize to fit new container size
+        });
+
+        showListBtn.addEventListener('click', () => {
+            mapView.classList.add('hidden');
+            listView.classList.remove('hidden');
+
+            showListBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showMapBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+        });
+
+        // --- Initial Load ---
+        initMap();
+        fetchAllListings();
+    });
+</script>

@@ -1,0 +1,133 @@
+---
+layout: "base.njk"
+title: "Iniciar Sesión en tu Cuenta"
+---
+
+<!-- Google GSI Client Library (needed for Google Sign-In) -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<div class="bg-gray-100 flex items-center justify-center py-16 md:py-24">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Inicia Sesión</h1>
+            <p class="text-gray-600 mt-2">Accede a tu panel para gestionar tus anuncios.</p>
+        </div>
+
+        <!-- Traditional Login Form -->
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="password" name="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                    Iniciar Sesión
+                </button>
+            </div>
+        </form>
+        <p id="message" class="text-center mt-4 text-sm"></p>
+
+        <!-- Separator -->
+        <div class="my-6 flex items-center">
+            <div class="flex-grow border-t border-gray-300"></div>
+            <span class="flex-shrink mx-4 text-gray-500">o</span>
+            <div class="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <div class="flex justify-center">
+            <div id="g_id_onload"
+                data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleCredentialResponse"
+                data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+        </div>
+        
+        <div class="mt-6">
+            <p class="text-sm text-center text-gray-600">
+                ¿No tienes una cuenta?
+                <a href="/registrarse" class="font-medium text-blue-600 hover:text-blue-500">
+                    Regístrate Gratis
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('loginForm');
+    const messageElement = document.getElementById('message');
+    const submitButton = form.querySelector('button');
+
+    function handleSuccessfulLogin(token) {
+        localStorage.setItem('authToken', token);
+        messageElement.textContent = '¡Inicio de sesión exitoso! Redirigiendo...';
+        messageElement.className = 'text-center mt-4 text-sm text-green-600';
+        setTimeout(() => {
+            // --- REDIRECT TO THE CORRECT DASHBOARD URL ---
+            window.location.href = '/cuenta/mis-terrenos';
+        }, 1500);
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); 
+        const data = { email: form.email.value, password: form.password.value };
+        submitButton.disabled = true;
+        submitButton.textContent = 'Iniciando Sesión...';
+        messageElement.textContent = '';
+
+        try {
+            const apiEndpoint = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/login_user'; 
+            const response = await fetch(apiEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const responseData = await response.json();
+            if (response.ok) {
+                handleSuccessfulLogin(responseData.token);
+            } else {
+                throw new Error(responseData.message || 'Login failed.');
+            }
+        } catch (error) {
+            messageElement.textContent = error.message;
+            messageElement.className = 'text-center mt-4 text-sm text-red-600';
+            submitButton.disabled = false;
+            submitButton.textContent = 'Iniciar Sesión';
+        }
+    });
+
+    function handleCredentialResponse(response) {
+      fetch('https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/google_login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: response.credential })
+      })
+      .then(res => res.json())
+      .then(data => {
+          if (data.token) {
+              handleSuccessfulLogin(data.token);
+          } else {
+              throw new Error(data.message || 'Login with Google failed.');
+          }
+      })
+      .catch(error => {
+          messageElement.textContent = error.message;
+          messageElement.className = 'text-center mt-4 text-sm text-red-600';
+      });
+    }
+</script>

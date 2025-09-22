@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explora Terrenos en Venta en Ecuador | Ecuador Terrenos</title>
+    <meta name="description" content="La forma más inteligente de vender su terreno en Ecuador. Ofrecemos marketing digital profesional y gratuito para conectar su propiedad con compradores calificados.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Style for the hero background image (can be used on other pages if needed) */
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero-background-land.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION START: Header now contains both logged-in and logged-out states -->
+    <!-- ===================================================================== -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-blue-700">Ecuador Terrenos</a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <!-- Logged-Out Links -->
+                <div id="desktop-logged-out-menu" class="flex space-x-6 items-center">
+                    <a href="/terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Ver Terrenos</a>
+                    <a href="/#anunciar" class="text-gray-600 hover:text-blue-700 font-medium">Cómo Funciona</a>
+                    <a href="/iniciar-session" class="text-gray-600 hover:text-blue-700 font-medium">Iniciar Sesión</a>
+                    <a href="/registrarse" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300">Publica Tu Anuncio GRATIS</a>
+                </div>
+                <!-- Logged-In Links (Initially hidden) -->
+                <div id="desktop-logged-in-menu" class="hidden space-x-6 items-center">
+                     <a href="/terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Ver Terrenos</a>
+                     <a href="/cuenta/mis-terrenos" class="text-gray-600 hover:text-blue-700 font-medium">Mis Anuncios</a>
+                     <a href="#" id="logout-button-desktop" class="text-gray-600 hover:text-red-600 font-medium">Cerrar Sesión</a>
+                     <a href="/cuenta/nuevo-terreno" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">Publicar Nuevo Terreno</a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+             <!-- Logged-Out Links -->
+            <div id="mobile-logged-out-menu" class="flex flex-col space-y-2">
+                <a href="/terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Ver Terrenos</a>
+                <a href="/#anunciar" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Cómo Funciona</a>
+                <a href="/iniciar-session" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Iniciar Sesión</a>
+                <a href="/registrarse" class="block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 text-center mt-2">Publica Tu Anuncio GRATIS</a>
+            </div>
+             <!-- Logged-In Links (Initially hidden) -->
+            <div id="mobile-logged-in-menu" class="hidden flex-col space-y-2">
+                <a href="/terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Ver Terrenos</a>
+                <a href="/cuenta/mis-terrenos" class="block text-gray-600 hover:text-blue-700 font-medium py-2">Mis Anuncios</a>
+                <a href="/cuenta/nuevo-terreno" class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 text-center mt-2">Publicar Nuevo Terreno</a>
+                <div class="border-t pt-2 mt-2">
+                    <a href="#" id="logout-button-mobile" class="block text-red-600 font-medium py-2 text-center">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION END: Header -->
+    <!-- ===================================================================== -->
+
+
+    <!-- This is where the content of each individual page will be injected -->
+    <main>
+        
+<!-- Mapbox GL JS and CSS (Specific to this page) -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+    /* Styles for the map and its popups */
+    #map {
+        width: 100%;
+        height: 75vh; /* A good height for the container */
+    }
+    .marker {
+        background-color: #2563eb; /* A solid blue color */
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid white; /* A white border for visibility */
+        cursor: pointer;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+    }
+    .mapboxgl-popup {
+        max-width: 300px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .mapboxgl-popup-content {
+        padding: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 8px;
+    }
+    .mapboxgl-popup-content img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    .mapboxgl-popup-close-button {
+        color: white;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+        margin: 8px 8px 0 0;
+    }
+</style>
+
+<div class="container mx-auto px-6 py-12">
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Terrenos en Venta en Ecuador</h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">Usa el buscador para filtrar y explora los terrenos en el mapa o en la lista.</p>
+    </div>
+
+    <!-- Controls: Search and View Toggle -->
+    <div class="flex flex-col md:flex-row gap-4 justify-between items-center mb-8 p-4 bg-white rounded-lg shadow">
+        <div class="w-full md:w-1/2">
+            <input type="text" id="search-input" placeholder="Buscar por ciudad, provincia o descripción..." class="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div class="flex items-center bg-gray-200 rounded-full p-1">
+            <button id="show-map-btn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
+                <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
+            </button>
+            <button id="show-list-btn" class="px-4 py-2 text-sm font-semibold rounded-full text-gray-700">
+                <i data-lucide="list" class="inline-block w-4 h-4 mr-1"></i> Lista
+            </button>
+        </div>
+    </div>
+
+    <!-- Message container for loading/error states -->
+    <p id="message" class="text-center text-gray-600 py-8">Cargando terrenos...</p>
+    
+    <!-- Map View -->
+    <div id="map-view">
+        <div id='map' class="rounded-lg shadow-lg"></div>
+    </div>
+
+    <!-- List View (hidden by default) -->
+    <div id="list-view" class="hidden">
+        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Listing cards will be injected here by JavaScript -->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DOM Elements ---
+        const messageElement = document.getElementById('message');
+        const searchInput = document.getElementById('search-input');
+        
+        const showMapBtn = document.getElementById('show-map-btn');
+        const showListBtn = document.getElementById('show-list-btn');
+        const mapView = document.getElementById('map-view');
+        const listView = document.getElementById('list-view');
+
+        const listingsContainer = document.getElementById('listings-container');
+
+        // --- State ---
+        const API_ENDPOINT = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_all_listings';
+        let allListings = [];
+        let map;
+        let markers = [];
+        
+        // --- Mapbox Initialization ---
+        function initMap() {
+            mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpcG1vcmVubyIsImEiOiJjbWZzcTAzYWUwbWdkMm5wd3pwaHZpdzA2In0.PlN6xmaS36bINGV8N_F9kA';
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [-79.0045, -2.8974], // Centered on Ecuador
+                zoom: 6
+            });
+            map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+        }
+
+        // --- Data Fetching ---
+        async function fetchAllListings() {
+            try {
+                const response = await fetch(API_ENDPOINT);
+                if (!response.ok) throw new Error('Network response failed');
+                
+                const responseData = await response.json();
+                
+                if (responseData.listings && responseData.listings.length > 0) {
+                    messageElement.style.display = 'none';
+                    allListings = responseData.listings;
+                    render(allListings); // Initial render of both map and list
+                } else {
+                    messageElement.textContent = 'No hay terrenos disponibles en este momento.';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                messageElement.textContent = 'Ocurrió un error al cargar los terrenos. Por favor, intenta de nuevo.';
+                messageElement.style.color = 'red';
+            }
+        }
+        
+        // --- Rendering Functions ---
+
+        // Function to render both Map and List
+        function render(listingsToRender) {
+            populateMap(listingsToRender);
+            renderListings(listingsToRender);
+        }
+        
+        // Populate the map with markers
+        function populateMap(listings) {
+            // Clear existing markers
+            markers.forEach(marker => marker.remove());
+            markers = [];
+
+            listings.forEach(listing => {
+                if (listing.location && listing.location.coordinates && listing.location.coordinates.length === 2) {
+                    const [longitude, latitude] = listing.location.coordinates;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'marker';
+
+                    const firstPhoto = (listing.photos && listing.photos.length > 0) 
+                        ? listing.photos[0] 
+                        : 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
+
+                    const popupHTML = `
+                        <div>
+                            <img src="${firstPhoto}" alt="${listing.titulo}">
+                            <div class="p-3">
+                                <h3 class="font-bold text-base text-gray-900 mb-1">${listing.titulo}</h3>
+                                <p class="font-bold text-blue-700 text-lg mb-2">$${listing.precio.toLocaleString()}</p>
+                                <a href="/anuncio.html?id=${listing._id.$oid}" class="text-sm font-semibold text-blue-600 hover:underline">Ver Detalles &rarr;</a>
+                            </div>
+                        </div>
+                    `;
+
+                    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
+
+                    const newMarker = new mapboxgl.Marker(el)
+                        .setLngLat([longitude, latitude])
+                        .setPopup(popup)
+                        .addTo(map);
+
+                    markers.push(newMarker);
+                }
+            });
+        }
+
+        // Render the list of cards
+        function renderListings(listings) {
+            listingsContainer.innerHTML = ''; // Clear previous listings
+            if (listings.length === 0) {
+                listingsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">No se encontraron terrenos con ese criterio de búsqueda.</p>';
+                return;
+            }
+
+            listings.forEach(listing => {
+                const firstPhoto = (listing.photos && listing.photos.length > 0) 
+                    ? listing.photos[0] 
+                    : 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+                card.innerHTML = `
+                    <a href="/anuncio.html?id=${listing._id.$oid}">
+                        <img src="${firstPhoto}" alt="${listing.titulo}" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h3>
+                            <p class="text-gray-600 mb-2">${listing.ciudad || ''}, ${listing.provincia || ''}</p>
+                            <p class="text-gray-700 mb-4">${listing.area} m²</p>
+                            <div class="text-2xl font-bold text-green-600">$${listing.precio.toLocaleString()}</div>
+                        </div>
+                    </a>
+                `;
+                listingsContainer.appendChild(card);
+            });
+        }
+
+        // --- Event Listeners ---
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredListings = allListings.filter(listing => 
+                Object.values(listing).some(value => 
+                    String(value).toLowerCase().includes(searchTerm)
+                )
+            );
+            render(filteredListings);
+        });
+
+        // View Toggling
+        showMapBtn.addEventListener('click', () => {
+            listView.classList.add('hidden');
+            mapView.classList.remove('hidden');
+            
+            showMapBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showListBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+            
+            map.resize(); // VERY IMPORTANT: tells map to resize to fit new container size
+        });
+
+        showListBtn.addEventListener('click', () => {
+            mapView.classList.add('hidden');
+            listView.classList.remove('hidden');
+
+            showListBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+            showMapBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+        });
+
+        // --- Initial Load ---
+        initMap();
+        fetchAllListings();
+    });
+</script>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Ecuador Terrenos. Todos los derechos reservados.</p>
+            <p class="text-sm text-gray-400 mt-2">La plataforma gratuita para vender y comprar terrenos en Ecuador.</p>
+        </div>
+    </footer>
+
+
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION START: Site-wide JavaScript updated for authentication -->
+    <!-- ===================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Initialize Lucide Icons ---
+            lucide.createIcons();
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    // Don't close for logout button, as it doesn't navigate
+                    if (!link.id.includes('logout')) {
+                       mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // --- Authentication & UI Update Logic ---
+            const desktopLoggedOutMenu = document.getElementById('desktop-logged-out-menu');
+            const desktopLoggedInMenu = document.getElementById('desktop-logged-in-menu');
+            const mobileLoggedOutMenu = document.getElementById('mobile-logged-out-menu');
+            const mobileLoggedInMenu = document.getElementById('mobile-logged-in-menu');
+
+            const token = localStorage.getItem('authToken');
+
+            if (token) {
+                // User is logged in, show the correct menus
+                desktopLoggedOutMenu.classList.add('hidden');
+                desktopLoggedInMenu.classList.remove('hidden');
+                desktopLoggedInMenu.classList.add('flex');
+
+                mobileLoggedOutMenu.classList.add('hidden');
+                mobileLoggedInMenu.classList.remove('hidden');
+                mobileLoggedInMenu.classList.add('flex');
+            } else {
+                // User is logged out, ensure default menus are shown
+                desktopLoggedOutMenu.classList.remove('hidden');
+                desktopLoggedInMenu.classList.add('hidden');
+
+                mobileLoggedOutMenu.classList.remove('hidden');
+                mobileLoggedInMenu.classList.add('hidden');
+            }
+
+            // --- Logout Functionality ---
+            function handleLogout(event) {
+                event.preventDefault();
+                localStorage.removeItem('authToken');
+                // You can add a confirmation message if you want
+                // alert('Has cerrado la sesión.');
+                window.location.href = '/';
+            }
+
+            // Attach logout handlers
+            const logoutButtonDesktop = document.getElementById('logout-button-desktop');
+            const logoutButtonMobile = document.getElementById('logout-button-mobile');
+
+            if (logoutButtonDesktop) {
+                logoutButtonDesktop.addEventListener('click', handleLogout);
+            }
+            if (logoutButtonMobile) {
+                logoutButtonMobile.addEventListener('click', handleLogout);
+            }
+        });
+    </script>
+    <!-- ===================================================================== -->
+    <!-- MODIFICATION END: JavaScript -->
+    <!-- ===================================================================== -->
+</body>
+</html>
