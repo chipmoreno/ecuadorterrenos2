@@ -8,7 +8,7 @@ title: "Explora Terrenos en Venta en Ecuador"
 <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
 
 <style>
-    /* Styles for the map and its popups */
+    /* Styles for the map and its popups (unchanged) */
     #map {
         width: 100%;
         height: 75vh;
@@ -22,11 +22,13 @@ title: "Explora Terrenos en Venta en Ecuador"
     .mapboxgl-popup-content { padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; }
     .mapboxgl-popup-content img { width: 100%; height: 150px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px; }
     .mapboxgl-popup-close-button { color: white; background-color: rgba(0,0,0,0.5); border-radius: 50%; margin: 8px 8px 0 0; }
+    /* Removed the broken .filter-input style */
 </style>
 
 <div class="container mx-auto px-6 py-12">
+    <!-- Page Header (Removed for brevity, you can keep it) -->
 
-    <!-- Advanced Filter Controls -->
+    <!-- UPDATED: More compact Advanced Filter Controls -->
     <div class="mb-8 p-3 bg-gray-50 rounded-lg shadow-md border border-gray-200">
         <form id="filter-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
             <!-- Location Filters -->
@@ -66,7 +68,7 @@ title: "Explora Terrenos en Venta en Ecuador"
                  <button type="button" id="reset-btn" class="w-full sm:w-auto px-4 py-1.5 text-sm bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors">
                     <i data-lucide="rotate-ccw" class="inline-block w-4 h-4 mr-2"></i>Limpiar
                 </button>
-                <!-- View Toggle -->
+                <!-- View Toggle remains -->
                 <div class="flex items-center bg-gray-200 rounded-full p-1 ml-auto">
                     <button type="button" id="show-map-btn" class="px-4 py-1.5 text-sm font-semibold rounded-full bg-blue-600 text-white shadow">
                         <i data-lucide="map" class="inline-block w-4 h-4 mr-1"></i> Mapa
@@ -79,14 +81,19 @@ title: "Explora Terrenos en Venta en Ecuador"
         </form>
     </div>
 
+    <!-- Message container for loading/error states -->
     <p id="message" class="text-center text-gray-600 py-8">Cargando terrenos...</p>
     
+    <!-- Map View -->
     <div id="map-view">
         <div id='map' class="rounded-lg shadow-lg"></div>
     </div>
 
+    <!-- List View (hidden by default) -->
     <div id="list-view" class="hidden">
-        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Listing cards will be injected here by JavaScript -->
+        </div>
     </div>
 </div>
 
@@ -102,6 +109,7 @@ title: "Explora Terrenos en Venta en Ecuador"
         const minPriceInput = document.getElementById('min-price');
         const maxPriceInput = document.getElementById('max-price');
         const resetBtn = document.getElementById('reset-btn');
+        
         const showMapBtn = document.getElementById('show-map-btn');
         const showListBtn = document.getElementById('show-list-btn');
         const mapView = document.getElementById('map-view');
@@ -114,34 +122,13 @@ title: "Explora Terrenos en Venta en Ecuador"
         let map;
         let markers = [];
         
-
-        // --- NEW HELPER FUNCTION: Slugify ---
-        function slugify(text) {
-            if (!text) return '';
-            return text
-                .toString()
-                .toLowerCase()
-                .replace(/\s+/g, '-')      
-                .replace(/[^\w-]+/g, '')   
-                .replace(/--+/g, '-')      
-                .replace(/^-+/, '')        
-                .replace(/-+$/, '');       
-        }
-
-        // --- NEW HELPER FUNCTION: Build URL ---
-        function buildListingURL(listing) {
-            const last6 = listing._id?.slice(-6) || '';
-            const slug = slugify(listing.titulo || '');
-            return `/anuncios/${slug}-${last6}`;
-        }
-        
         // --- Mapbox Initialization ---
         function initMap() {
             mapboxgl.accessToken = 'pk.eyJ1IjoiY2hpcG1vcmVubyIsImEiOiJjbWZzcTAzYWUwbWdkMm5wd3pwaHZpdzA2In0.PlN6xmaS36bINGV8N_F9kA';
             map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v12',
-                center: [-79.0045, -2.8974],
+                center: [-79.0045, -2.8974], // Centered on Ecuador
                 zoom: 6
             });
             map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
@@ -187,7 +174,13 @@ title: "Explora Terrenos en Venta en Ecuador"
                     cityFilter.disabled = true;
                     return;
                 }
-                const cities = [...new Set(listings.filter(l => l.provincia === selectedProvince && l.ciudad).map(l => l.ciudad))].sort();
+                
+                const cities = [...new Set(
+                    listings
+                        .filter(l => l.provincia === selectedProvince && l.ciudad)
+                        .map(l => l.ciudad)
+                )].sort();
+
                 cities.forEach(city => {
                     const option = document.createElement('option');
                     option.value = city;
@@ -218,6 +211,7 @@ title: "Explora Terrenos en Venta en Ecuador"
                 if (!isNaN(maxPrice) && listing.precio > maxPrice) return false;
                 return true;
             });
+            
             render(filteredListings);
         }
         
@@ -242,15 +236,13 @@ title: "Explora Terrenos en Venta en Ecuador"
                     const el = document.createElement('div');
                     el.className = 'marker';
                     const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/300x150.png?text=Sin+Foto';
-                    const url = buildListingURL(listing);
-                    
                     const popupHTML = `
                         <div>
                             <img src="${firstPhoto}" alt="${listing.titulo}">
                             <div class="p-3">
                                 <h3 class="font-bold text-base text-gray-900 mb-1">${listing.titulo}</h3>
                                 <p class="font-bold text-blue-700 text-lg mb-2">$${listing.precio.toLocaleString()}</p>
-                                <a href="${url}" class="text-sm font-semibold text-blue-600 hover:underline">Ver Detalles &rarr;</a>
+                                <a href="/anuncio.html?id=${listing._id.$oid}" class="text-sm font-semibold text-blue-600 hover:underline">Ver Detalles &rarr;</a>
                             </div>
                         </div>
                     `;
@@ -271,10 +263,8 @@ title: "Explora Terrenos en Venta en Ecuador"
                 const firstPhoto = listing.photos?.[0] || 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
-                const url = buildListingURL(listing);
-                
                 card.innerHTML = `
-                    <a href="${url}">
+                    <a href="/anuncio.html?id=${listing._id.$oid}">
                         <img src="${firstPhoto}" alt="${listing.titulo}" class="w-full h-56 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h3>
