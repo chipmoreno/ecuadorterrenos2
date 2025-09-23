@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crea tu Cuenta Gratis | Ecuador Terrenos</title>
+    <title>Editar Anuncio | Ecuador Terrenos</title>
     <meta name="description" content="La forma más inteligente de vender su terreno en Ecuador. Ofrecemos marketing digital profesional y gratuito para conectar su propiedad con compradores calificados.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,140 +74,134 @@
 
     <!-- This is where the content of each individual page will be injected -->
     <main>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-<div class="bg-gray-100 flex items-center justify-center py-16 md:py-24">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Crea tu Cuenta</h1>
-            <p class="text-gray-600 mt-2">Es rápido, fácil y 100% gratis.</p>
-        </div>
-
-        <form id="registrationForm" class="space-y-6">
-            <div>
-                <label for="fullname" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                <input type="text" id="fullname" name="fullname" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                <input type="text" id="username" name="username" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                    Registrarme
-                </button>
-            </div>
-        </form>
-        <!-- Separator -->
-        <div class="my-6 flex items-center">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="flex-shrink mx-4 text-gray-500">o</span>
-            <div class="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <!-- Google Sign-In Button -->
-        <div class="flex justify-center">
-            <div id="g_id_onload"
-                data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleCredentialResponse"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
-        </div>
         
-        <p id="message" class="text-center mt-4 text-sm"></p>
-
-        <div class="mt-6">
-            <p class="text-sm text-center text-gray-600">
-                ¿Ya tienes una cuenta?
-                <a href="/iniciar-session" class="font-medium text-blue-600 hover:text-blue-500">
-                    Inicia Sesión aquí
-                </a>
-            </p>
+<main>
+    <section class="bg-gray-100 py-20">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="bg-white p-8 md:p-12 rounded-lg shadow-lg">
+                <h1 class="text-3xl font-bold mb-6 text-center">Editar Anuncio</h1>
+                <form id="edit-form" class="space-y-6">
+                    <div>
+                        <label for="titulo" class="block text-gray-700 font-semibold mb-2">Título del Anuncio</label>
+                        <input type="text" id="titulo" name="titulo" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción Completa</label>
+                        <textarea id="descripcion" name="descripcion" rows="6" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="provincia" class="block text-gray-700 font-semibold mb-2">Provincia</label>
+                            <input type="text" id="provincia" name="provincia" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="ciudad" class="block text-gray-700 font-semibold mb-2">Ciudad/Cantón</label>
+                            <input type="text" id="ciudad" name="ciudad" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="direccion" class="block text-gray-700 font-semibold mb-2">Dirección o Sector</label>
+                        <input type="text" id="direccion" name="direccion" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="area" class="block text-gray-700 font-semibold mb-2">Área (m²)</label>
+                            <input type="number" id="area" name="area" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="precio" class="block text-gray-700 font-semibold mb-2">Precio (USD)</label>
+                            <input type="number" id="precio" name="precio" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div class="text-center pt-4">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 w-full md:w-auto">
+                            Actualizar Anuncio
+                        </button>
+                        <p id="message" class="mt-4 text-sm"></p>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
 <script>
-    const form = document.getElementById('registrationForm');
+    const form = document.getElementById('edit-form');
     const messageElement = document.getElementById('message');
-    const submitButton = form.querySelector('button');
+    let listingId;
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-        
-        const email = document.getElementById('email').value;
-        const username = document.getElementById('username').value;
-        const fullname = document.getElementById('fullname').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (password !== confirmPassword) {
-            messageElement.textContent = 'Las contraseñas no coinciden.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
+    async function fetchListingDetails() {
+        const urlParams = new URLSearchParams(window.location.search);
+        listingId = urlParams.get('id');
+        if (!listingId) {
+            messageElement.textContent = 'Error: No se encontró el ID del anuncio.';
             return;
         }
 
-        submitButton.disabled = true;
-        submitButton.textContent = 'Registrando...';
-        messageElement.textContent = '';
-
-        const data = { email, username, fullname, password };
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = '/iniciar-session';
+            return;
+        }
 
         try {
-            const apiEndpoint = 'https://registeruser-n3ecidiukq-uc.a.run.app'; 
-            const response = await fetch(apiEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+            const response = await fetch(`https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_my_listings/${listingId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            
-            const responseData = await response.json();
 
             if (response.ok) {
-                messageElement.textContent = '¡Cuenta creada con éxito! Redirigiendo...';
-                messageElement.className = 'text-center mt-4 text-sm text-green-600';
-                
-                // --- UX IMPROVEMENT: Auto-login and redirect ---
-                localStorage.setItem('authToken', responseData.token);
-                setTimeout(() => {
-                    window.location.href = '/cuenta/nuevo-terreno'; // Send them straight to creating their first listing
-                }, 1500);
-
+                const listing = await response.json();
+                Object.keys(listing).forEach(key => {
+                    if (form.elements[key]) {
+                        form.elements[key].value = listing[key];
+                    }
+                });
             } else {
-                messageElement.textContent = responseData.msg || 'El registro falló.';
-                messageElement.className = 'text-center mt-4 text-sm text-red-600';
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrarme';
+                messageElement.textContent = 'No se pudieron cargar los detalles del anuncio.';
+                messageElement.className = 'mt-4 text-sm text-red-600';
             }
         } catch (error) {
-            console.error('Error:', error);
-            messageElement.textContent = 'Ocurrió un error. Por favor, inténtalo más tarde.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
-            submitButton.disabled = false;
-            submitButton.textContent = 'Registrarme';
+            messageElement.textContent = 'Ocurrió un error al cargar los detalles.';
+            messageElement.className = 'mt-4 text-sm text-red-600';
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const updateEndpoint = `https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/edit_listing?listingId=${listingId}`;
+            const response = await fetch(updateEndpoint, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                messageElement.textContent = '¡Anuncio actualizado con éxito!';
+                messageElement.className = 'mt-4 text-sm text-green-600';
+                 setTimeout(() => {
+                    window.location.href = '/cuenta/mis-terrenos';
+                }, 1500);
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'No se pudo actualizar el anuncio.');
+            }
+        } catch (error) {
+            messageElement.textContent = `Error: ${error.message}`;
+            messageElement.className = 'mt-4 text-sm text-red-600';
         }
     });
+
+    document.addEventListener('DOMContentLoaded', fetchListingDetails);
 </script>
     </main>
 

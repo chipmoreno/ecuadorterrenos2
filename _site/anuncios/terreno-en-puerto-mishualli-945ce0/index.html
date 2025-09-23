@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crea tu Cuenta Gratis | Ecuador Terrenos</title>
+    <title>{{ listing.titulo }} | Ecuador Terrenos</title>
     <meta name="description" content="La forma más inteligente de vender su terreno en Ecuador. Ofrecemos marketing digital profesional y gratuito para conectar su propiedad con compradores calificados.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,138 +74,126 @@
 
     <!-- This is where the content of each individual page will be injected -->
     <main>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-<div class="bg-gray-100 flex items-center justify-center py-16 md:py-24">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Crea tu Cuenta</h1>
-            <p class="text-gray-600 mt-2">Es rápido, fácil y 100% gratis.</p>
-        </div>
-
-        <form id="registrationForm" class="space-y-6">
-            <div>
-                <label for="fullname" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                <input type="text" id="fullname" name="fullname" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                <input type="text" id="username" name="username" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                    Registrarme
-                </button>
-            </div>
-        </form>
-        <!-- Separator -->
-        <div class="my-6 flex items-center">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="flex-shrink mx-4 text-gray-500">o</span>
-            <div class="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <!-- Google Sign-In Button -->
-        <div class="flex justify-center">
-            <div id="g_id_onload"
-                data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleCredentialResponse"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
-        </div>
         
-        <p id="message" class="text-center mt-4 text-sm"></p>
+<div class="bg-white py-12">
+    <div class="container mx-auto px-6">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-800">Terreno en Puerto Mishualli</h1>
+            <p class="text-xl text-gray-600 mt-2">Tena, Napo</p>
+        </div>
 
-        <div class="mt-6">
-            <p class="text-sm text-center text-gray-600">
-                ¿Ya tienes una cuenta?
-                <a href="/iniciar-session" class="font-medium text-blue-600 hover:text-blue-500">
-                    Inicia Sesión aquí
-                </a>
-            </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            
+                <img src="https://storage.googleapis.com/www.ecuadorterrenos.com/listings/536754f1-51c1-4405-bf22-ca3caf709936.jpeg" alt="Foto de Terreno en Puerto Mishualli" class="w-full h-auto rounded-lg shadow-md object-cover">
+            
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="md:col-span-2">
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-2">Descripción</h2>
+                    <p class="text-gray-700 whitespace-pre-wrap">Beautiful land in Mishualli!</p>
+                </div>
+            </div>
+
+            <div>
+                <div class="bg-blue-50 p-6 rounded-lg shadow-lg sticky top-24">
+                    <div class="text-4xl font-bold text-green-600 mb-4">$ 25,000</div>
+                    
+                    <div class="space-y-3 text-lg">
+                        <div class="flex justify-between">
+                            <span class="font-bold">Área:</span>
+                            <span>500 m²</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-bold">Dirección:</span>
+                            <span class="text-right">Puerto Mishaulli</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 border-t pt-4">
+                        <h3 class="font-bold text-xl mb-2">Contacta al Vendedor</h3>
+                        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                            <input type="hidden" name="access_key" value="8c93c84e-bab1-46bf-8500-06e7fd5c053c">
+                            <input type="hidden" name="subject" value="Interés en tu terreno: Terreno en Puerto Mishualli">
+                            <input type="hidden" name="recipient" value="chip.moreno@gmail.com">
+
+                            <input type="hidden" name="terreno_id" value="">
+                            <input type="hidden" name="terreno_titulo" value="Terreno en Puerto Mishualli">
+                            <input type="hidden" name="vendedor_email" value="chip.moreno@gmail.com">
+                            <input type="hidden" name="vendedor_nombre" value="">
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="nombre" class="sr-only">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" required class="w-full p-2 border border-gray-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label for="email" class="sr-only">Correo Electrónico</label>
+                                    <input type="email" id="email" name="email" placeholder="Tu Correo Electrónico" required class="w-full p-2 border border-gray-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label for="telefono" class="sr-only">Teléfono</label>
+                                    <input type="tel" id="telefono" name="telefono" placeholder="Tu Teléfono (Opcional)" class="w-full p-2 border border-gray-300 rounded-md">
+                                </div>
+                                <div>
+                                    <label for="mensaje" class="sr-only">Mensaje</label>
+                                    <textarea id="mensaje" name="mensaje" rows="4" placeholder="Tu Mensaje" required class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full transition duration-300">Enviar Mensaje</button>
+                            </div>
+                            <p id="message" class="mt-4 text-sm text-center"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script>
-    const form = document.getElementById('registrationForm');
-    const messageElement = document.getElementById('message');
-    const submitButton = form.querySelector('button');
+    const contactForm = document.getElementById('contact-form');
+    const message = document.getElementById('message');
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        const email = document.getElementById('email').value;
-        const username = document.getElementById('username').value;
-        const fullname = document.getElementById('fullname').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+        const formData = new FormData(contactForm);
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
 
-        if (password !== confirmPassword) {
-            messageElement.textContent = 'Las contraseñas no coinciden.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
-            return;
-        }
-
-        submitButton.disabled = true;
-        submitButton.textContent = 'Registrando...';
-        messageElement.textContent = '';
-
-        const data = { email, username, fullname, password };
+        message.textContent = 'Enviando...';
+        message.className = 'mt-4 text-sm text-center text-gray-600';
 
         try {
-            const apiEndpoint = 'https://registeruser-n3ecidiukq-uc.a.run.app'; 
-            const response = await fetch(apiEndpoint, {
+            const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
             });
+
+            const result = await response.json();
             
-            const responseData = await response.json();
-
-            if (response.ok) {
-                messageElement.textContent = '¡Cuenta creada con éxito! Redirigiendo...';
-                messageElement.className = 'text-center mt-4 text-sm text-green-600';
-                
-                // --- UX IMPROVEMENT: Auto-login and redirect ---
-                localStorage.setItem('authToken', responseData.token);
-                setTimeout(() => {
-                    window.location.href = '/cuenta/nuevo-terreno'; // Send them straight to creating their first listing
-                }, 1500);
-
+            if (result.success) {
+                message.textContent = '¡Mensaje enviado con éxito!';
+                message.className = 'mt-4 text-sm text-center text-green-600';
+                contactForm.reset();
             } else {
-                messageElement.textContent = responseData.msg || 'El registro falló.';
-                messageElement.className = 'text-center mt-4 text-sm text-red-600';
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrarme';
+                console.error('Web3Forms Error:', result);
+                message.textContent = `Error: ${result.message || 'El mensaje no se pudo enviar.'}`;
+                message.className = 'mt-4 text-sm text-center text-red-600';
             }
+
         } catch (error) {
-            console.error('Error:', error);
-            messageElement.textContent = 'Ocurrió un error. Por favor, inténtalo más tarde.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
-            submitButton.disabled = false;
-            submitButton.textContent = 'Registrarme';
+            console.error('Network Error:', error);
+            message.textContent = 'Ocurrió un error de red. Por favor, inténtalo de nuevo.';
+            message.className = 'mt-4 text-sm text-center text-red-600';
         }
     });
 </script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crea tu Cuenta Gratis | Ecuador Terrenos</title>
+    <title>Mis Anuncios | Ecuador Terrenos</title>
     <meta name="description" content="La forma más inteligente de vender su terreno en Ecuador. Ofrecemos marketing digital profesional y gratuito para conectar su propiedad con compradores calificados.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,140 +74,132 @@
 
     <!-- This is where the content of each individual page will be injected -->
     <main>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-<div class="bg-gray-100 flex items-center justify-center py-16 md:py-24">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Crea tu Cuenta</h1>
-            <p class="text-gray-600 mt-2">Es rápido, fácil y 100% gratis.</p>
-        </div>
-
-        <form id="registrationForm" class="space-y-6">
+        
+<div class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-6 py-12">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-                <label for="fullname" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                <input type="text" id="fullname" name="fullname" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Mis Anuncios Publicados</h1>
+                <p class="text-gray-600 mt-1">Gestiona, edita o elimina tus terrenos en venta.</p>
             </div>
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                <input type="text" id="username" name="username" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                    Registrarme
-                </button>
-            </div>
-        </form>
-        <!-- Separator -->
-        <div class="my-6 flex items-center">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="flex-shrink mx-4 text-gray-500">o</span>
-            <div class="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <!-- Google Sign-In Button -->
-        <div class="flex justify-center">
-            <div id="g_id_onload"
-                data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleCredentialResponse"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
+            <a href="/cuenta/nuevo-terreno" class="mt-4 md:mt-0 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 shadow-lg">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                Publicar Nuevo Anuncio
+            </a>
         </div>
         
-        <p id="message" class="text-center mt-4 text-sm"></p>
-
-        <div class="mt-6">
-            <p class="text-sm text-center text-gray-600">
-                ¿Ya tienes una cuenta?
-                <a href="/iniciar-session" class="font-medium text-blue-600 hover:text-blue-500">
-                    Inicia Sesión aquí
-                </a>
-            </p>
+        <p id="message" class="text-center text-gray-600 py-8"></p>
+        
+        <!-- Listings Grid -->
+        <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cards will be injected here -->
+        </div>
+        
+        <!-- Empty State (hidden by default) -->
+        <div id="empty-state" class="hidden text-center bg-white p-12 rounded-lg shadow-md mt-8">
+            <i data-lucide="folder-open" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-700">Aún no tienes anuncios</h2>
+            <p class="text-gray-500 mt-2 mb-6">¡Empieza hoy! Publica tu primer terreno para llegar a miles de compradores.</p>
+            <a href="/cuenta/nuevo-terreno" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-lg">
+                Publicar mi Primer Anuncio
+            </a>
         </div>
     </div>
 </div>
 
 <script>
-    const form = document.getElementById('registrationForm');
+    const listingsContainer = document.getElementById('listings-container');
     const messageElement = document.getElementById('message');
-    const submitButton = form.querySelector('button');
+    const emptyStateElement = document.getElementById('empty-state');
+    const apiEndpoint = 'https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/get_my_listings';
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); 
-        
-        const email = document.getElementById('email').value;
-        const username = document.getElementById('username').value;
-        const fullname = document.getElementById('fullname').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (password !== confirmPassword) {
-            messageElement.textContent = 'Las contraseñas no coinciden.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
+    async function fetchListings() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = '/iniciar-session'; // Redirect if not logged in
             return;
         }
 
-        submitButton.disabled = true;
-        submitButton.textContent = 'Registrando...';
-        messageElement.textContent = '';
-
-        const data = { email, username, fullname, password };
-
         try {
-            const apiEndpoint = 'https://registeruser-n3ecidiukq-uc.a.run.app'; 
             const response = await fetch(apiEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            
-            const responseData = await response.json();
 
             if (response.ok) {
-                messageElement.textContent = '¡Cuenta creada con éxito! Redirigiendo...';
-                messageElement.className = 'text-center mt-4 text-sm text-green-600';
-                
-                // --- UX IMPROVEMENT: Auto-login and redirect ---
-                localStorage.setItem('authToken', responseData.token);
-                setTimeout(() => {
-                    window.location.href = '/cuenta/nuevo-terreno'; // Send them straight to creating their first listing
-                }, 1500);
-
+                const responseData = await response.json();
+                if (responseData.listings && responseData.listings.length > 0) {
+                    messageElement.style.display = 'none';
+                    renderListings(responseData.listings);
+                } else {
+                    messageElement.style.display = 'none';
+                    listingsContainer.style.display = 'none';
+                    emptyStateElement.classList.remove('hidden');
+                }
             } else {
-                messageElement.textContent = responseData.msg || 'El registro falló.';
-                messageElement.className = 'text-center mt-4 text-sm text-red-600';
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrarme';
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Could not fetch listings.');
             }
         } catch (error) {
-            console.error('Error:', error);
-            messageElement.textContent = 'Ocurrió un error. Por favor, inténtalo más tarde.';
-            messageElement.className = 'text-center mt-4 text-sm text-red-600';
-            submitButton.disabled = false;
-            submitButton.textContent = 'Registrarme';
+            messageElement.textContent = `Error: ${error.message}`;
+            messageElement.className = 'text-center text-red-600 p-4 bg-red-100 rounded-md';
         }
-    });
+    }
+
+    function renderListings(listings) {
+        listings.forEach(listing => {
+            const firstPhoto = (listing.photos && listing.photos.length > 0) 
+                ? listing.photos[0] 
+                : 'https://via.placeholder.com/400x300.png?text=Sin+Foto';
+            
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col';
+            card.innerHTML = `
+                <img src="${firstPhoto}" alt="${listing.titulo}" class="w-full h-56 object-cover">
+                <div class="p-6 flex-grow">
+                    <h2 class="text-xl font-bold mb-2 truncate">${listing.titulo}</h2>
+                    <p class="text-gray-600 mb-4">${listing.ciudad || ''}, ${listing.provincia || ''}</p>
+                    <div class="text-2xl font-bold text-green-600">$${listing.precio.toLocaleString()}</div>
+                </div>
+                <div class="p-4 bg-gray-50 border-t flex justify-end gap-2">
+                    <a href="/cuenta/editar-terreno?id=${listing._id}" class="inline-flex items-center gap-1 text-sm bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 px-3 rounded-md transition duration-200">
+                        <i data-lucide="file-edit" class="w-4 h-4"></i> Editar
+                    </a>
+                    <button onclick="deleteListing('${listing._id}')" class="inline-flex items-center gap-1 text-sm bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-md transition duration-200">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Eliminar
+                    </button>
+                </div>
+            `;
+            listingsContainer.appendChild(card);
+        });
+        lucide.createIcons(); // Re-initialize icons after adding them to the DOM
+    }
+
+    async function deleteListing(listingId) {
+        if (confirm('¿Estás seguro de que quieres eliminar este anuncio? Esta acción no se puede deshacer.')) {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            const deleteEndpoint = `https://us-central1-ultimate-life-472800-r4.cloudfunctions.net/delete_listing?listingId=${listingId}`;
+            try {
+                const response = await fetch(deleteEndpoint, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    alert('¡Anuncio eliminado con éxito!');
+                    window.location.reload();
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Unknown error.');
+                }
+            } catch (error) {
+                alert(`Error al eliminar el anuncio: ${error.message}`);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchListings);
 </script>
     </main>
 
