@@ -2,7 +2,7 @@
 layout: "base.njk"
 title: "Crea tu Cuenta Gratis"
 ---
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <div class="bg-gray-100 flex items-center justify-center py-16 md:py-24">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div class="text-center mb-8">
@@ -37,31 +37,6 @@ title: "Crea tu Cuenta Gratis"
                 </button>
             </div>
         </form>
-        <!-- Separator -->
-        <div class="my-6 flex items-center">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="flex-shrink mx-4 text-gray-500">o</span>
-            <div class="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <!-- Google Sign-In Button -->
-        <div class="flex justify-center">
-            <div id="g_id_onload"
-                data-client_id="1086146638813-q6v04vsdcbr9ei6uaaknclppme267gpi.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleCredentialResponse"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
-        </div>
         
         <p id="message" class="text-center mt-4 text-sm"></p>
 
