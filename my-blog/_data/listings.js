@@ -29,7 +29,7 @@ module.exports = async function() {
   
   try {
     await client.connect();
-    const db = client.getDatabase('listings');
+    const db = client.db('listings');
     const listingsCollection = db.collection('terrenos');
     
     // Fetch all listings. You might want to filter for "active" listings in the future.
